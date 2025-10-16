@@ -2,7 +2,6 @@ export interface Game {
   id: string
   name: string
   type: string
-  icon: string
 }
 
 export interface CountryData {
@@ -29,17 +28,17 @@ export const GAME_TYPES = [
 ]
 
 export const GAMES: Game[] = [
-  { id: 'valorant', name: 'Valorant', type: 'FPS', icon: '🎯' },
-  { id: 'csgo', name: 'CS:GO', type: 'FPS', icon: '🔫' },
-  { id: 'lol', name: 'League of Legends', type: 'MOBA', icon: '⚔️' },
-  { id: 'dota2', name: 'Dota 2', type: 'MOBA', icon: '🛡️' },
-  { id: 'fortnite', name: 'Fortnite', type: 'Battle Royale', icon: '🏆' },
-  { id: 'pubg', name: 'PUBG', type: 'Battle Royale', icon: '🎮' },
-  { id: 'wow', name: 'World of Warcraft', type: 'RPG', icon: '🐉' },
-  { id: 'ffxiv', name: 'Final Fantasy XIV', type: 'RPG', icon: '✨' },
-  { id: 'starcraft', name: 'StarCraft II', type: 'Strategy', icon: '🚀' },
-  { id: 'fifa', name: 'FIFA 24', type: 'Sports', icon: '⚽' },
-  { id: 'f1', name: 'F1 2024', type: 'Racing', icon: '🏎️' },
+  { id: 'valorant', name: 'Valorant', type: 'FPS' },
+  { id: 'csgo', name: 'CS:GO', type: 'FPS' },
+  { id: 'lol', name: 'League of Legends', type: 'MOBA' },
+  { id: 'dota2', name: 'Dota 2', type: 'MOBA' },
+  { id: 'fortnite', name: 'Fortnite', type: 'Battle Royale' },
+  { id: 'pubg', name: 'PUBG', type: 'Battle Royale' },
+  { id: 'wow', name: 'World of Warcraft', type: 'RPG' },
+  { id: 'ffxiv', name: 'Final Fantasy XIV', type: 'RPG' },
+  { id: 'starcraft', name: 'StarCraft II', type: 'Strategy' },
+  { id: 'fifa', name: 'FIFA 24', type: 'Sports' },
+  { id: 'f1', name: 'F1 2024', type: 'Racing' },
 ]
 
 // Generate mock data for countries

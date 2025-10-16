@@ -6,6 +6,7 @@ import { Badge } from './ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Game, GAMES, GAME_TYPES } from '@/data/mockData'
 import { cn } from '@/lib/utils'
+import { GameIcon } from './GameIcon'
 
 interface GameFilterProps {
   onGameSelect: (game: Game | null) => void
@@ -73,7 +74,7 @@ export function GameFilter({ onGameSelect, selectedGame }: GameFilterProps) {
           {selectedGame && (
             <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">{selectedGame.icon}</span>
+                <GameIcon gameId={selectedGame.id} size={40} />
                 <div>
                   <div className="font-semibold">{selectedGame.name}</div>
                   <div className="text-xs text-muted-foreground">{selectedGame.type}</div>
@@ -104,7 +105,7 @@ export function GameFilter({ onGameSelect, selectedGame }: GameFilterProps) {
                     selectedGame?.id === game.id && 'border-primary bg-primary/10'
                   )}
                 >
-                  <span className="text-2xl">{game.icon}</span>
+                  <GameIcon gameId={game.id} size={40} />
                   <div className="text-left flex-1">
                     <div className="font-medium">{game.name}</div>
                     <div className="text-xs text-muted-foreground">{game.type}</div>

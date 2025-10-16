@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Moon, Sun, Activity, RefreshCw, Wifi, WifiOff } from 'lucide-react'
+import { Moon, Sun, RefreshCw, Wifi, WifiOff, Activity } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { Badge } from './components/ui/badge'
 import { WorldMap } from './components/WorldMap'
@@ -7,6 +7,10 @@ import { GameFilter } from './components/GameFilter'
 import { StatsPanel } from './components/StatsPanel'
 import { GameNews } from './components/GameNews'
 import { Tournaments } from './components/Tournaments'
+import { LiveStatsBar } from './components/LiveStatsBar'
+import { GameLeaderboard } from './components/GameLeaderboard'
+import { PlayerTrendChart } from './components/PlayerTrendChart'
+import { ParticleBackground } from './components/ParticleBackground'
 import { Game, COUNTRY_DATA, getCountryData, CountryData } from './data/mockData'
 import { useRealTimeData } from './hooks/useRealTimeData'
 
@@ -38,17 +42,72 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground relative">
+      {/* Particle Background */}
+      <ParticleBackground />
+      
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+      <header className="relative border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-primary rounded-lg p-2">
-                <Activity className="h-6 w-6 text-primary-foreground" />
+              {/* Custom WikiGames Logo */}
+              <div className="relative">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Gradient Definitions */}
+                  <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
+                      <stop offset="50%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: '#06b6d4', stopOpacity: 1 }} />
+                    </linearGradient>
+                    <linearGradient id="logoGlow" x1="50%" y1="0%" x2="50%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 0.8 }} />
+                      <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 0.2 }} />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* Glow Effect */}
+                  <circle cx="24" cy="24" r="22" fill="url(#logoGlow)" opacity="0.3" />
+                  
+                  {/* Globe/World */}
+                  <circle cx="24" cy="24" r="18" fill="url(#logoGradient)" />
+                  
+                  {/* Latitude Lines */}
+                  <ellipse cx="24" cy="24" rx="18" ry="6" fill="none" stroke="white" strokeWidth="1.5" opacity="0.4" />
+                  <ellipse cx="24" cy="24" rx="18" ry="12" fill="none" stroke="white" strokeWidth="1.5" opacity="0.3" />
+                  
+                  {/* Longitude Line */}
+                  <path d="M 24 6 Q 30 24 24 42" fill="none" stroke="white" strokeWidth="1.5" opacity="0.4" />
+                  <path d="M 24 6 Q 18 24 24 42" fill="none" stroke="white" strokeWidth="1.5" opacity="0.4" />
+                  
+                  {/* Gaming Controller Icon in Center */}
+                  <g transform="translate(24, 24)">
+                    {/* Controller Body */}
+                    <rect x="-6" y="-3" width="12" height="6" rx="2" fill="white" opacity="0.9" />
+                    
+                    {/* D-Pad Left */}
+                    <circle cx="-3" cy="0" r="1.2" fill="url(#logoGradient)" />
+                    
+                    {/* Buttons Right */}
+                    <circle cx="3" cy="0" r="1.2" fill="url(#logoGradient)" />
+                    
+                    {/* Triggers */}
+                    <rect x="-5" y="-4.5" width="2.5" height="1.5" rx="0.5" fill="white" opacity="0.7" />
+                    <rect x="2.5" y="-4.5" width="2.5" height="1.5" rx="0.5" fill="white" opacity="0.7" />
+                  </g>
+                  
+                  {/* Pulse Animation */}
+                  <circle cx="24" cy="24" r="20" fill="none" stroke="url(#logoGradient)" strokeWidth="1" opacity="0.6">
+                    <animate attributeName="r" from="20" to="23" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold">WikiGames</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+                  WikiGames
+                </h1>
                 <p className="text-sm text-muted-foreground">Global Gaming Analytics</p>
               </div>
             </div>
@@ -110,7 +169,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      <main className="relative container mx-auto px-4 py-6 z-10">
         {/* Server Status Banner */}
         {!serverAvailable && (
           <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
@@ -141,6 +200,17 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Live Stats Bar */}
+        {data && (
+          <LiveStatsBar
+            totalPlayers={data.globalStats.totalPlayers}
+            activeGames={data.globalStats.activeGames}
+            liveCountries={data.countries.length}
+            isLive={isConnected}
+          />
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Sidebar - Game Filter */}
           <div className="lg:col-span-3">
@@ -169,6 +239,24 @@ function App() {
             />
           </div>
         </div>
+
+        {/* Game Analytics Section */}
+        {data && (
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Game Leaderboard */}
+            <GameLeaderboard games={data.games} />
+            
+            {/* Player Trend Chart */}
+            {selectedGame ? (
+              <PlayerTrendChart 
+                gameId={selectedGame.id} 
+                gameName={selectedGame.name}
+              />
+            ) : (
+              <PlayerTrendChart />
+            )}
+          </div>
+        )}
 
         {/* News and Tournaments Section */}
         {data?.news && data.news.length > 0 && (
