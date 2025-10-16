@@ -1,6 +1,7 @@
 import { getAllSteamPlayerCounts, STEAM_GAMES } from './steamService.js'
 import { getGameInfo, GameInfo } from './rawgService.js'
 import { getLatestNews, getUpcomingTournaments } from './gameNewsService.js'
+import { getSteamSpyGameDetails } from './steamSpyService.js'
 import { AggregatedData, GameData, CountryPlayerData } from '../types.js'
 
 // Cache for data
@@ -65,22 +66,42 @@ export async function aggregateGameData(): Promise<AggregatedData> {
       const playerCount = steamData.get(gameId) || 0
       totalPlayers += playerCount
 
+      // Get enhanced data from SteamSpy (FREE!)
+      const steamSpyData = await getSteamSpyGameDetails(game.appId)
+      
       // Get game info from RAWG (with fallback to mock data)
       const gameInfo = await getGameInfo(game.name, process.env.RAWG_API_KEY)
+
+      // Calculate trend based on SteamSpy data
+      let trend: 'up' | 'down' | 'stable' = 'stable'
+      if (steamSpyData) {
+        const ratio = steamSpyData.average_2weeks / (steamSpyData.average_forever || 1)
+        if (ratio > 1.1) trend = 'up'
+        else if (ratio < 0.9) trend = 'down'
+      }
 
       games.push({
         gameId,
         gameName: game.name,
         currentPlayers: playerCount,
         peakPlayers24h: Math.floor(playerCount * 1.3), // Estimate
-        trend: 'stable',
+        trend,
         lastUpdate: new Date().toISOString(),
-        sources: ['Steam API'],
-        description: gameInfo?.shortDescription,
+        sources: ['Steam API', 'SteamSpy'],
+        description: gameInfo?.shortDescription || steamSpyData?.name,
         rating: gameInfo?.rating,
         metacritic: gameInfo?.metacritic,
-        genres: gameInfo?.genres,
-        image: gameInfo?.image
+        genres: gameInfo?.genres || (steamSpyData?.genre ? [steamSpyData.genre] : undefined),
+        image: gameInfo?.image,
+        // SteamSpy exclusive data
+        owners: steamSpyData?.owners,
+        positiveReviews: steamSpyData?.positive,
+        negativeReviews: steamSpyData?.negative,
+        userScore: steamSpyData?.userscore,
+        averagePlaytime: steamSpyData?.average_forever,
+        recentPlaytime: steamSpyData?.average_2weeks,
+        price: steamSpyData?.price,
+        tags: steamSpyData?.tags ? Object.keys(steamSpyData.tags).slice(0, 5) : undefined
       })
     }
 

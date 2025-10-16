@@ -11,6 +11,15 @@ export interface GameData {
   metacritic?: number
   genres?: string[]
   image?: string
+  // SteamSpy data
+  owners?: string // e.g., "100,000..200,000"
+  positiveReviews?: number
+  negativeReviews?: number
+  userScore?: number // 0-100
+  averagePlaytime?: number // minutes
+  recentPlaytime?: number // minutes in last 2 weeks
+  price?: string
+  tags?: string[]
 }
 
 export interface CountryPlayerData {

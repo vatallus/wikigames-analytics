@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { TrendingUp, Users, Globe, Gamepad2 } from 'lucide-react'
 import { Game, CountryData, COUNTRY_DATA, getTotalPlayersForGame, getTopCountriesForGame } from '@/data/mockData'
+import { GameDetails } from './GameDetails'
 import { formatNumber } from '@/lib/utils'
+import { useRealTimeData } from '@/hooks/useRealTimeData'
 
 interface StatsPanelProps {
   selectedGame: Game | null
@@ -11,6 +13,14 @@ interface StatsPanelProps {
 }
 
 export function StatsPanel({ selectedGame, selectedCountry }: StatsPanelProps) {
+  const { data } = useRealTimeData()
+
+  // Find the selected game's real-time data
+  const selectedGameData = useMemo(() => {
+    if (!selectedGame || !data) return null
+    return data.games.find(g => g.gameId === selectedGame.id)
+  }, [selectedGame, data])
+
   const globalStats = useMemo(() => {
     if (selectedGame) {
       const totalPlayers = getTotalPlayersForGame(selectedGame.id)
@@ -37,6 +47,11 @@ export function StatsPanel({ selectedGame, selectedCountry }: StatsPanelProps) {
 
   return (
     <div className="space-y-4">
+      {/* Game Details with SteamSpy data */}
+      {selectedGame && selectedGameData && (
+        <GameDetails game={selectedGameData} />
+      )}
+
       {/* Global Stats */}
       <Card>
         <CardHeader>

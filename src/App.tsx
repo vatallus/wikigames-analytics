@@ -312,7 +312,6 @@ function App() {
       <footer className="border-t mt-12 py-6 bg-card/50">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>WikiGames © 2024 - Global Gaming Analytics Platform</p>
-          <p className="mt-1">Built with React, TypeScript, TailwindCSS & React Simple Maps</p>
         </div>
       </footer>
     </div>
