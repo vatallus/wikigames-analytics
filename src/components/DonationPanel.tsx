@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Heart, Copy, Check, ExternalLink, Gift, Shield, QrCode } from 'lucide-react'
+import { X, Heart, Copy, Check, Gift, Shield, QrCode } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card'
 import { Badge } from './ui/badge'
+import { VerifyTransactionModal } from './VerifyTransactionModal'
 import toast from 'react-hot-toast'
 
 interface DonationPanelProps {
@@ -50,9 +50,9 @@ const WALLET_ADDRESSES = {
 }
 
 export function DonationPanel({ isOpen, onClose }: DonationPanelProps) {
-  const navigate = useNavigate()
   const [selectedWallet, setSelectedWallet] = useState<keyof typeof WALLET_ADDRESSES>('usdt_trc20')
   const [copiedAddress, setCopiedAddress] = useState(false)
+  const [verifyModalOpen, setVerifyModalOpen] = useState(false)
 
   const copyAddress = (address: string) => {
     navigator.clipboard.writeText(address)
@@ -262,13 +262,10 @@ export function DonationPanel({ isOpen, onClose }: DonationPanelProps) {
                   </ol>
                   <Button 
                     className="w-full mt-4"
-                    onClick={() => {
-                      navigate('/donate/confirm')
-                      onClose()
-                    }}
+                    onClick={() => setVerifyModalOpen(true)}
                   >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Confirm Your Donation
+                    <Check className="h-4 w-4 mr-2" />
+                    I've Sent the Donation
                   </Button>
                 </CardContent>
               </Card>
@@ -283,6 +280,13 @@ export function DonationPanel({ isOpen, onClose }: DonationPanelProps) {
               </div>
             </div>
           </motion.div>
+
+          {/* Verify Transaction Modal */}
+          <VerifyTransactionModal
+            isOpen={verifyModalOpen}
+            onClose={() => setVerifyModalOpen(false)}
+            selectedCurrency={selectedWallet}
+          />
         </>
       )}
     </AnimatePresence>

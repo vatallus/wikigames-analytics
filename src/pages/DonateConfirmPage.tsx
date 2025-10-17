@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Send, CheckCircle } from 'lucide-react'
+import { ArrowLeft, Send, CheckCircle, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import toast from 'react-hot-toast'
@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 export function DonateConfirmPage() {
   const navigate = useNavigate()
   const [submitted, setSubmitted] = useState(false)
+  const [verified, setVerified] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +18,40 @@ export function DonateConfirmPage() {
     message: '',
     featureRequest: ''
   })
+
+  // Check if user has verified transaction
+  useEffect(() => {
+    const verifiedDonation = sessionStorage.getItem('verified_donation')
+    
+    if (verifiedDonation) {
+      try {
+        const data = JSON.parse(verifiedDonation)
+        
+        // Check if verification is recent (within 30 minutes)
+        const isRecent = Date.now() - data.timestamp < 30 * 60 * 1000
+        
+        if (data.verified && isRecent) {
+          setVerified(true)
+          // Pre-fill form data
+          setFormData(prev => ({
+            ...prev,
+            amount: data.amount,
+            currency: data.currency.toUpperCase().replace('_', ' '),
+            transactionHash: data.txHash
+          }))
+        } else {
+          // Verification expired
+          sessionStorage.removeItem('verified_donation')
+          setVerified(false)
+        }
+      } catch (e) {
+        console.error('Error parsing verified donation:', e)
+        setVerified(false)
+      }
+    } else {
+      setVerified(false)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,6 +75,73 @@ export function DonateConfirmPage() {
       status: 'pending'
     })
     localStorage.setItem('pending_donations', JSON.stringify(donations))
+    
+    // Clear verification data after successful submission
+    sessionStorage.removeItem('verified_donation')
+  }
+
+  // Show error if not verified
+  if (!verified) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-lg w-full">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4">
+              <AlertCircle className="h-16 w-16 text-yellow-500 mx-auto" />
+            </div>
+            <CardTitle className="text-2xl">Transaction Not Verified</CardTitle>
+            <CardDescription>
+              You need to verify your transaction first
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 space-y-2 text-sm">
+              <p className="font-medium">⚠️ Access Denied</p>
+              <p className="text-muted-foreground">
+                This page is only accessible after you've verified your donation transaction.
+              </p>
+            </div>
+
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p><strong>To access this page:</strong></p>
+              <ol className="list-decimal list-inside space-y-1 ml-4">
+                <li>Make sure you've sent your donation</li>
+                <li>Click "Donate" button on the website</li>
+                <li>Click "I've Sent the Donation"</li>
+                <li>Enter your transaction hash</li>
+                <li>After verification, you'll be redirected here</li>
+              </ol>
+            </div>
+
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => navigate('/')}
+                className="flex-1"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Go Home
+              </Button>
+              <Button 
+                onClick={() => {
+                  navigate('/')
+                  // Trigger donate panel open (you'll need to implement this)
+                  setTimeout(() => {
+                    toast('Click the "Donate" button to start!', {
+                      icon: '💰',
+                      duration: 3000
+                    })
+                  }, 500)
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Start Donation
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (submitted) {
