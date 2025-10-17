@@ -17,20 +17,64 @@ export function StatsPanel({ selectedGame, selectedCountry }: StatsPanelProps) {
 
   // Find the selected game's real-time data
   const selectedGameData = useMemo(() => {
-    if (!selectedGame || !data) return null
-    return data.games.find(g => g.gameId === selectedGame.id)
+    if (!selectedGame) return null
+    
+    // Try to find real-time data from backend
+    if (data) {
+      const realTimeData = data.games.find(g => g.gameId === selectedGame.id)
+      if (realTimeData) return realTimeData
+    }
+    
+    // Fallback: Create mock data for non-Steam games
+    const mockPlayerCount = getTotalPlayersForGame(selectedGame.id)
+    return {
+      gameId: selectedGame.id,
+      gameName: selectedGame.name,
+      currentPlayers: mockPlayerCount,
+      // Mock SteamSpy-like data
+      owners: mockPlayerCount > 10000000 ? '50,000,000 .. 100,000,000' :
+              mockPlayerCount > 5000000 ? '20,000,000 .. 50,000,000' :
+              mockPlayerCount > 2000000 ? '10,000,000 .. 20,000,000' :
+              mockPlayerCount > 1000000 ? '5,000,000 .. 10,000,000' :
+              '2,000,000 .. 5,000,000',
+      positiveReviews: Math.floor(mockPlayerCount * 0.08 * 0.87), // ~8% leave reviews, 87% positive
+      negativeReviews: Math.floor(mockPlayerCount * 0.08 * 0.13),
+      averagePlaytime: selectedGame.type === 'MOBA' ? 35000 : // ~580 hours for MOBAs
+                       selectedGame.type === 'FPS' ? 25000 :  // ~416 hours for FPS
+                       selectedGame.type === 'Battle Royale' ? 20000 :
+                       selectedGame.type === 'RPG' ? 40000 :
+                       30000,
+      recentPlaytime: 720, // ~12 hours in last 2 weeks
+      price: 'Free to Play',
+      tags: (() => {
+        const baseTags = [selectedGame.type, 'Multiplayer']
+        switch (selectedGame.type) {
+          case 'FPS': return [...baseTags, 'Shooter', 'Competitive', 'Action']
+          case 'MOBA': return [...baseTags, 'Strategy', 'Team-Based', 'Competitive']
+          case 'Battle Royale': return [...baseTags, 'Survival', 'Last Man Standing', 'PvP']
+          case 'RPG': return [...baseTags, 'Adventure', 'Story Rich', 'Character Customization']
+          case 'Strategy': return [...baseTags, 'Turn-Based', 'Tactical', 'War']
+          case 'Sports': return [...baseTags, 'Simulation', 'Sports', 'Realistic']
+          case 'Racing': return [...baseTags, 'Driving', 'Fast-Paced', 'Simulation']
+          default: return [...baseTags, 'Action', 'Online', 'Competitive']
+        }
+      })(),
+      userScore: 87
+    }
   }, [selectedGame, data])
 
   const globalStats = useMemo(() => {
     if (selectedGame) {
-      const totalPlayers = getTotalPlayersForGame(selectedGame.id)
+      // Use real-time data if available, otherwise fallback to mock
+      const totalPlayers = selectedGameData?.currentPlayers || getTotalPlayersForGame(selectedGame.id)
       const topCountries = getTopCountriesForGame(selectedGame.id, 5)
       return { totalPlayers, topCountries }
     }
     
-    const totalPlayers = COUNTRY_DATA.reduce((sum, country) => sum + country.totalPlayers, 0)
+    // If no game selected, show global total from real-time data or mock
+    const totalPlayers = data?.globalStats?.totalPlayers || COUNTRY_DATA.reduce((sum, country) => sum + country.totalPlayers, 0)
     return { totalPlayers, topCountries: [] }
-  }, [selectedGame])
+  }, [selectedGame, selectedGameData, data])
 
   const countryStats = useMemo(() => {
     if (!selectedCountry) return null
@@ -47,8 +91,8 @@ export function StatsPanel({ selectedGame, selectedCountry }: StatsPanelProps) {
 
   return (
     <div className="space-y-4">
-      {/* Game Details with SteamSpy data */}
-      {selectedGame && selectedGameData && (
+      {/* Game Details with real or mock data */}
+      {selectedGameData && (
         <GameDetails game={selectedGameData} />
       )}
 

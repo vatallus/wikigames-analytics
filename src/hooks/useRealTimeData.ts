@@ -6,6 +6,7 @@ import {
   AggregatedDataResponse,
   refreshData
 } from '@/services/apiService'
+import { useNotifications } from './useNotifications'
 
 export function useRealTimeData() {
   const [data, setData] = useState<AggregatedDataResponse | null>(null)
@@ -14,6 +15,10 @@ export function useRealTimeData() {
   const [error, setError] = useState<string | null>(null)
   const [serverAvailable, setServerAvailable] = useState(false)
   const wsRef = useRef<WebSocket | null>(null)
+  const previousDataRef = useRef<AggregatedDataResponse | null>(null)
+  
+  // Get notification helpers
+  const { checkPlayerSpike, checkPlayerDrop, checkMilestone } = useNotifications()
 
   // Check if server is running
   useEffect(() => {
@@ -57,12 +62,62 @@ export function useRealTimeData() {
     loadInitialData()
   }, [serverAvailable])
 
+  // Auto-detect changes and trigger notifications
+  const detectChangesAndNotify = useCallback((newData: AggregatedDataResponse) => {
+    if (!previousDataRef.current) {
+      previousDataRef.current = newData
+      return
+    }
+
+    const prevData = previousDataRef.current
+    
+    // Check each game for changes
+    newData.games.forEach(newGame => {
+      const prevGame = prevData.games.find(g => g.gameId === newGame.gameId)
+      
+      if (prevGame) {
+        // Check for player spikes (>50% increase)
+        if (newGame.currentPlayers > prevGame.currentPlayers) {
+          checkPlayerSpike(
+            newGame.gameId,
+            newGame.gameName,
+            prevGame.currentPlayers,
+            newGame.currentPlayers
+          )
+        }
+        
+        // Check for player drops (>30% decrease)
+        if (newGame.currentPlayers < prevGame.currentPlayers) {
+          checkPlayerDrop(
+            newGame.gameId,
+            newGame.gameName,
+            prevGame.currentPlayers,
+            newGame.currentPlayers
+          )
+        }
+        
+        // Check for milestones
+        checkMilestone(
+          newGame.gameId,
+          newGame.gameName,
+          newGame.currentPlayers
+        )
+      }
+    })
+
+    // Update previous data
+    previousDataRef.current = newData
+  }, [checkPlayerSpike, checkPlayerDrop, checkMilestone])
+
   // WebSocket connection for real-time updates
   useEffect(() => {
     if (!serverAvailable) return
 
     const ws = createWebSocketConnection(
       (newData) => {
+        // Detect changes and notify BEFORE setting data
+        detectChangesAndNotify(newData)
+        
         setData(newData)
         setIsConnected(true)
         setError(null)

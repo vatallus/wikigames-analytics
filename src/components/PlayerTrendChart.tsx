@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 interface PlayerTrendChartProps {
   gameId?: string
   gameName?: string
+  currentPlayers?: number
 }
 
 // Mock historical data - in real app this would come from backend
@@ -26,13 +27,11 @@ const generateMockTrendData = (currentPlayers: number) => {
   return data
 }
 
-export function PlayerTrendChart({ gameId, gameName }: PlayerTrendChartProps) {
-  // Mock data - replace with real data from props
-  const mockCurrentPlayers = gameId === 'csgo' ? 1260000 : 
-                             gameId === 'dota2' ? 725000 : 
-                             gameId === 'pubg' ? 453000 : 500000
+export function PlayerTrendChart({ gameId: _gameId, gameName, currentPlayers }: PlayerTrendChartProps) {
+  // Use real current players from props, fallback to 500000 for mock
+  const playerCount = currentPlayers || 500000
   
-  const data = generateMockTrendData(mockCurrentPlayers)
+  const data = generateMockTrendData(playerCount)
 
   return (
     <motion.div
