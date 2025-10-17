@@ -1,16 +1,17 @@
 import { ShareableStatsCard } from '@/components/ShareableStatsCard'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, Sparkles, TrendingUp, Share2, Download, Zap } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export function ShareTestPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div>
+    <div className="min-h-screen bg-gradient-to-b from-violet-500/10 via-background to-background py-8 px-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Hero Header */}
+        <div className="text-center space-y-4">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
@@ -19,15 +20,60 @@ export function ShareTestPage() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </Button>
-          <h1 className="text-3xl font-bold mb-2">Test Shareable Stats Cards</h1>
-          <p className="text-muted-foreground">
-            Create beautiful stat cards to share on social media 🚀
+          
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">Viral Marketing Tool</span>
+          </div>
+          
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+            Shareable Stats Cards
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Create stunning stat cards và share lên social media.
+            <br />
+            Mỗi share = FREE marketing cho bạn! 🚀
           </p>
         </div>
 
+        {/* Stats Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <CardContent className="p-6 text-center">
+              <Download className="h-8 w-8 mx-auto mb-3 text-primary" />
+              <h3 className="font-semibold mb-2">Download as Image</h3>
+              <p className="text-sm text-muted-foreground">High-quality PNG ready to share</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-primary/20 bg-gradient-to-br from-blue-500/5 to-transparent">
+            <CardContent className="p-6 text-center">
+              <Share2 className="h-8 w-8 mx-auto mb-3 text-blue-500" />
+              <h3 className="font-semibold mb-2">One-Click Share</h3>
+              <p className="text-sm text-muted-foreground">Direct to Twitter, Facebook, Discord</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-primary/20 bg-gradient-to-br from-green-500/5 to-transparent">
+            <CardContent className="p-6 text-center">
+              <Zap className="h-8 w-8 mx-auto mb-3 text-green-500" />
+              <h3 className="font-semibold mb-2">Auto URL</h3>
+              <p className="text-sm text-muted-foreground">Your website link included</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Example 1: CS:GO Stats */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Example 1: Game Stats</h2>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center text-white font-bold">
+              1
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Game Player Stats</h2>
+              <p className="text-muted-foreground">Showcase massive player counts</p>
+            </div>
+          </div>
           <ShareableStatsCard
             title="🔥 CS:GO ON FIRE"
             mainStat="1.2M"
@@ -40,8 +86,16 @@ export function ShareTestPage() {
         </div>
 
         {/* Example 2: Country Stats */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Example 2: Country Stats</h2>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold">
+              2
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Country Gaming Stats</h2>
+              <p className="text-muted-foreground">Highlight regional dominance</p>
+            </div>
+          </div>
           <ShareableStatsCard
             title="VIETNAM GAMING"
             mainStat="2.5M"
@@ -55,8 +109,16 @@ export function ShareTestPage() {
         </div>
 
         {/* Example 3: Trending Game */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Example 3: Trending Stats</h2>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold">
+              3
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Trending Insights</h2>
+              <p className="text-muted-foreground">Catch attention with growth stats</p>
+            </div>
+          </div>
           <ShareableStatsCard
             title="TRENDING NOW"
             mainStat="850K"
@@ -68,28 +130,96 @@ export function ShareTestPage() {
           />
         </div>
 
-        {/* Instructions */}
-        <div className="bg-muted p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-3">How to Use:</h3>
-          <ol className="list-decimal list-inside space-y-2 text-sm">
-            <li>Click "Download Image" to save the stat card</li>
-            <li>Click "Share on Twitter" or "Share on Facebook" to post directly</li>
-            <li>Click "Copy Link" to share the website URL</li>
-            <li>The image includes wikigames.org URL for free marketing!</li>
-            <li>Create your own cards with real data from the homepage</li>
-          </ol>
-        </div>
+        {/* How It Works */}
+        <Card className="border-primary/20 bg-gradient-to-br from-violet-500/5 via-blue-500/5 to-cyan-500/5">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              <TrendingUp className="h-6 w-6 text-primary" />
+              How to Go Viral
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <span className="h-6 w-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm">1</span>
+                  Cách Dùng
+                </h4>
+                <ol className="space-y-3 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary">▸</span>
+                    <span>Click <strong>"Download Image"</strong> để lưu ảnh PNG</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary">▸</span>
+                    <span>Click <strong>"Share on Twitter/Facebook"</strong> để post trực tiếp</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary">▸</span>
+                    <span>Click <strong>"Copy Link"</strong> để share anywhere</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">✓</span>
+                    <span>Mỗi ảnh có <strong>wikigames.org URL</strong> = FREE marketing!</span>
+                  </li>
+                </ol>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <span className="h-6 w-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm">2</span>
+                  Pro Tips
+                </h4>
+                <ul className="space-y-3 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">🔥</span>
+                    <span>Post khi games hit milestones ("CS:GO just hit 1M!")</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-500">🌍</span>
+                    <span>Share country stats vào local gaming groups</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-orange-500">📈</span>
+                    <span>Trending games với "↑ X% increase" = attention!</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-500">#</span>
+                    <span>Hashtags: #gaming #esports #gamingstatistics</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-pink-500">⏰</span>
+                    <span>Best times: 8-10am hoặc 6-8pm</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Tips */}
-        <div className="bg-primary/5 border border-primary/20 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-3">💡 Marketing Tips:</h3>
-          <ul className="space-y-2 text-sm">
-            <li>✅ Post when games hit milestones (e.g., "CS:GO just hit 1M players!")</li>
-            <li>✅ Share country-specific stats on local gaming groups</li>
-            <li>✅ Post trending games with "↑ X% increase" to catch attention</li>
-            <li>✅ Use hashtags: #gaming #esports #gamingstatistics #pcgaming</li>
-            <li>✅ Post best times: 8-10am or 6-8pm for max engagement</li>
-          </ul>
+        {/* CTA */}
+        <Card className="border-2 border-primary bg-gradient-to-r from-primary/10 via-blue-500/10 to-cyan-500/10">
+          <CardContent className="p-8 text-center space-y-4">
+            <h3 className="text-2xl font-bold">Ready to Get Your First 1000 Visitors?</h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Download 1 card ngay bây giờ, post lên Facebook/Twitter của bạn!
+              <br />
+              Tag 10 friends → They visit → Some share → VIRAL! 🚀
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button size="lg" className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600">
+                <Download className="h-5 w-5 mr-2" />
+                Download First Card
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/')}>
+                Back to Dashboard
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        {/* Footer Stats */}
+        <div className="text-center py-8 text-sm text-muted-foreground">
+          <p>💡 <strong>Pro Tip:</strong> Post 1 card/day = 100 shares/month = 5,000 visitors = First $100!</p>
         </div>
       </div>
     </div>
