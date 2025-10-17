@@ -1,3 +1,6 @@
+import { GAMES } from '@/data/mockData'
+import { useState } from 'react'
+
 interface GameIconProps {
   gameId: string
   size?: number
@@ -5,6 +8,26 @@ interface GameIconProps {
 }
 
 export function GameIcon({ gameId, size = 32, className = '' }: GameIconProps) {
+  const [imageError, setImageError] = useState(false)
+  
+  // Get game from data
+  const game = GAMES.find(g => g.id === gameId)
+  const logoUrl = game?.icon || game?.logo
+  
+  // If we have a real logo and no error, use it
+  if (logoUrl && !imageError) {
+    return (
+      <img 
+        src={logoUrl} 
+        alt={game?.name || gameId}
+        className={`rounded-lg object-cover ${className}`}
+        style={{ width: size, height: size }}
+        onError={() => setImageError(true)}
+      />
+    )
+  }
+  
+  // Fallback to SVG icons
   const icons: { [key: string]: JSX.Element } = {
     valorant: (
       <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>

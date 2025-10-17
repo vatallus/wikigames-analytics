@@ -2,6 +2,8 @@ export interface Game {
   id: string
   name: string
   type: string
+  logo?: string
+  icon?: string
 }
 
 export interface CountryData {
@@ -28,17 +30,83 @@ export const GAME_TYPES = [
 ]
 
 export const GAMES: Game[] = [
-  { id: 'valorant', name: 'Valorant', type: 'FPS' },
-  { id: 'csgo', name: 'CS:GO', type: 'FPS' },
-  { id: 'lol', name: 'League of Legends', type: 'MOBA' },
-  { id: 'dota2', name: 'Dota 2', type: 'MOBA' },
-  { id: 'fortnite', name: 'Fortnite', type: 'Battle Royale' },
-  { id: 'pubg', name: 'PUBG', type: 'Battle Royale' },
-  { id: 'wow', name: 'World of Warcraft', type: 'RPG' },
-  { id: 'ffxiv', name: 'Final Fantasy XIV', type: 'RPG' },
-  { id: 'starcraft', name: 'StarCraft II', type: 'Strategy' },
-  { id: 'fifa', name: 'FIFA 24', type: 'Sports' },
-  { id: 'f1', name: 'F1 2024', type: 'Racing' },
+  { 
+    id: 'valorant', 
+    name: 'Valorant', 
+    type: 'FPS',
+    logo: 'https://media.rawg.io/media/games/1bd/1bd2657b81eb0c99338120ad444b24ff.jpg',
+    icon: 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1172620/b6453c45cb9cf5b49b3bccf5f5cf90f01ff405cd.jpg'
+  },
+  { 
+    id: 'csgo', 
+    name: 'CS:GO', 
+    type: 'FPS',
+    logo: 'https://media.rawg.io/media/games/736/73619bd336c894d6941d926bfd563946.jpg',
+    icon: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg'
+  },
+  { 
+    id: 'lol', 
+    name: 'League of Legends', 
+    type: 'MOBA',
+    logo: 'https://media.rawg.io/media/games/78d/78dfae12fb8c5b16cd78648553071e0a.jpg',
+    icon: 'https://static.developer.riotgames.com/img/logo-riot.png'
+  },
+  { 
+    id: 'dota2', 
+    name: 'Dota 2', 
+    type: 'MOBA',
+    logo: 'https://media.rawg.io/media/games/d07/d0790809a13027251b6d0f4dc7538c58.jpg',
+    icon: 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg'
+  },
+  { 
+    id: 'fortnite', 
+    name: 'Fortnite', 
+    type: 'Battle Royale',
+    logo: 'https://media.rawg.io/media/games/1f4/1f47a270b8f241e4676b14d39ec620f7.jpg',
+    icon: 'https://cdn2.unrealengine.com/24br-s24-egs-launcher-blade-2560x1440-2560x1440-da4c30806e9f.jpg'
+  },
+  { 
+    id: 'pubg', 
+    name: 'PUBG', 
+    type: 'Battle Royale',
+    logo: 'https://media.rawg.io/media/games/1bd/1bd2657b81eb0c99338120ad444b24ff.jpg',
+    icon: 'https://cdn.cloudflare.steamstatic.com/steam/apps/578080/header.jpg'
+  },
+  { 
+    id: 'wow', 
+    name: 'World of Warcraft', 
+    type: 'RPG',
+    logo: 'https://media.rawg.io/media/games/c81/c812e158129e00c9b0f096ae8a0bb7d6.jpg',
+    icon: 'https://bnetcmsus-a.akamaihd.net/cms/page_media/w3/W3DL4Z5T77YQ1509650287190.jpg'
+  },
+  { 
+    id: 'ffxiv', 
+    name: 'Final Fantasy XIV', 
+    type: 'RPG',
+    logo: 'https://media.rawg.io/media/games/596/596a48ef3b62b63b4cc59633e28be903.jpg',
+    icon: 'https://img.finalfantasyxiv.com/lds/promo/h/j/6jT4thuyEP93Z99xaJIg-uJ6-w.png'
+  },
+  { 
+    id: 'starcraft', 
+    name: 'StarCraft II', 
+    type: 'Strategy',
+    logo: 'https://media.rawg.io/media/games/a9a/a9a2472f862b041d2980103ddbb61c91.jpg',
+    icon: 'https://bnetcmsus-a.akamaihd.net/cms/page_media/NO44N7DDJAPF1464983998729.png'
+  },
+  { 
+    id: 'fifa', 
+    name: 'FIFA 24', 
+    type: 'Sports',
+    logo: 'https://media.rawg.io/media/games/f87/f87457e8347484033cb34cde6101d08d.jpg',
+    icon: 'https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/common/featured-image-16x9.jpg.adapt.crop16x9.1023w.jpg'
+  },
+  { 
+    id: 'f1', 
+    name: 'F1 2024', 
+    type: 'Racing',
+    logo: 'https://media.rawg.io/media/games/23d/23d78acedbb5f40aa77132d9919a2668.jpg',
+    icon: 'https://cdn-products.eneba.com/resized-products/hG7JRTinUFEpWKZ1h6ykEBc7S5vDT4vVvlXgYCugTdA_350x200_1x-0.jpeg'
+  },
 ]
 
 // Generate mock data for countries
