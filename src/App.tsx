@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Moon, Sun, RefreshCw, Wifi, WifiOff, Bell } from 'lucide-react'
+import { Moon, Sun, RefreshCw, Wifi, WifiOff, Bell, Heart } from 'lucide-react'
 import { Analytics } from '@vercel/analytics/react'
+import { Toaster } from 'react-hot-toast'
 import { Button } from './components/ui/button'
 import { Badge } from './components/ui/badge'
 import { Navigation } from './components/Navigation'
 import { ParticleBackground } from './components/ParticleBackground'
 import { NotificationPanel } from './components/NotificationPanel'
+import { DonationPanel } from './components/DonationPanel'
 import { HomePage } from './pages/HomePage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { LeaderboardsPage } from './pages/LeaderboardsPage'
@@ -18,6 +20,7 @@ import { useNotifications } from './hooks/useNotifications'
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [notificationPanelOpen, setNotificationPanelOpen] = useState(false)
+  const [donationPanelOpen, setDonationPanelOpen] = useState(false)
   const { isConnected, serverAvailable, refresh } = useRealTimeData()
   const { unreadCount } = useNotifications()
 
@@ -110,6 +113,15 @@ function App() {
                   </div>
                 </div>
 
+                {/* Donation Button */}
+                <Button
+                  onClick={() => setDonationPanelOpen(true)}
+                  className="h-9 px-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white border-0"
+                >
+                  <Heart className="h-4 w-4 mr-2 fill-current" />
+                  <span className="hidden sm:inline">Donate</span>
+                </Button>
+
                 {/* Notifications Button */}
                 <Button
                   variant="outline"
@@ -188,6 +200,15 @@ function App() {
           isOpen={notificationPanelOpen} 
           onClose={() => setNotificationPanelOpen(false)} 
         />
+
+        {/* Donation Panel */}
+        <DonationPanel
+          isOpen={donationPanelOpen}
+          onClose={() => setDonationPanelOpen(false)}
+        />
+
+        {/* Toast Notifications */}
+        <Toaster position="top-right" />
 
         {/* Vercel Analytics */}
         <Analytics />
