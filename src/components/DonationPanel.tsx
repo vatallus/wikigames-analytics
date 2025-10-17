@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Heart, Copy, Check, ExternalLink, Gift, Shield, QrCode } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
@@ -49,6 +50,7 @@ const WALLET_ADDRESSES = {
 }
 
 export function DonationPanel({ isOpen, onClose }: DonationPanelProps) {
+  const navigate = useNavigate()
   const [selectedWallet, setSelectedWallet] = useState<keyof typeof WALLET_ADDRESSES>('usdt_trc20')
   const [copiedAddress, setCopiedAddress] = useState(false)
 
@@ -261,12 +263,12 @@ export function DonationPanel({ isOpen, onClose }: DonationPanelProps) {
                   <Button 
                     className="w-full mt-4"
                     onClick={() => {
-                      toast.success('Feature coming soon! 🚀')
-                      window.open('/donate/confirm', '_blank')
+                      navigate('/donate/confirm')
+                      onClose()
                     }}
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    Submit Donation Info
+                    Confirm Your Donation
                   </Button>
                 </CardContent>
               </Card>

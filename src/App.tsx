@@ -14,6 +14,7 @@ import { AnalyticsPage } from './pages/AnalyticsPage'
 import { LeaderboardsPage } from './pages/LeaderboardsPage'
 import { DiscoverPage } from './pages/DiscoverPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { DonateConfirmPage } from './pages/DonateConfirmPage'
 import { useRealTimeData } from './hooks/useRealTimeData'
 import { useNotifications } from './hooks/useNotifications'
 
@@ -176,8 +177,8 @@ function App() {
             <Route path="/leaderboards" element={<LeaderboardsPage />} />
             <Route path="/discover" element={<DiscoverPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-          </Routes>
-        </main>
+            <Route path="/donate/confirm" element={<DonateConfirmPage />} />
+          </Routes>        </main>
 
         {/* Footer */}
         <footer className="relative border-t bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 mt-16 z-10">
