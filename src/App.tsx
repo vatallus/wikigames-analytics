@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Moon, Sun, RefreshCw, Wifi, WifiOff, Bell } from 'lucide-react'
+import { Analytics } from '@vercel/analytics/react'
 import { Button } from './components/ui/button'
 import { Badge } from './components/ui/badge'
 import { Navigation } from './components/Navigation'
@@ -187,6 +188,9 @@ function App() {
           isOpen={notificationPanelOpen} 
           onClose={() => setNotificationPanelOpen(false)} 
         />
+
+        {/* Vercel Analytics */}
+        <Analytics />
       </div>
     </Router>
   )
