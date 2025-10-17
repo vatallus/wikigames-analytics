@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps'
 import { Button } from './ui/button'
 import { ZoomIn, ZoomOut } from 'lucide-react'
@@ -13,7 +13,7 @@ interface WorldMapProps {
   onCountryClick: (countryCode: string) => void
 }
 
-export function WorldMap({ selectedGame, countryData, onCountryClick }: WorldMapProps) {
+export function WorldMap({ selectedGame, countryData: _countryData, onCountryClick }: WorldMapProps) {
   const [zoom, setZoom] = useState(1)
   const [center, setCenter] = useState<[number, number]>([0, 20])
 
@@ -26,6 +26,7 @@ export function WorldMap({ selectedGame, countryData, onCountryClick }: WorldMap
   }
 
   // Calculate color intensity based on player count
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getCountryColor = (geo: any) => {
     const countryName = geo.properties.name
     
@@ -169,14 +170,15 @@ export function WorldMap({ selectedGame, countryData, onCountryClick }: WorldMap
         <ZoomableGroup
           zoom={zoom}
           center={center}
-          onMoveEnd={({ coordinates, zoom }) => {
+          onMoveEnd={({ coordinates, zoom }: { coordinates: [number, number]; zoom: number }) => {
             setCenter(coordinates)
             setZoom(zoom)
           }}
         >
           <Geographies geography={geoUrl}>
-            {({ geographies }) =>
-              geographies.map((geo) => (
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {({ geographies }: { geographies: any[] }) =>
+              geographies.map((geo: any) => (
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
