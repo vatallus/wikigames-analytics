@@ -81,51 +81,69 @@ export function ShareableStatsCard({
       {/* Shareable Card */}
       <div
         ref={cardRef}
-        className="bg-gradient-to-br from-violet-600 via-blue-600 to-cyan-600 p-8 rounded-xl shadow-2xl"
+        className="relative bg-gradient-to-br from-violet-600 via-blue-600 to-cyan-600 p-10 rounded-2xl shadow-2xl overflow-hidden"
         style={{ width: '600px', height: '400px' }}
       >
-        <div className="h-full flex flex-col justify-between text-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl transform -translate-x-32 translate-y-32"></div>
+        </div>
+        
+        <div className="relative h-full flex flex-col justify-between text-white">
           {/* Header */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              {countryFlag && <span className="text-5xl">{countryFlag}</span>}
-              <div>
-                <h2 className="text-3xl font-bold">{title}</h2>
-                {country && <p className="text-xl opacity-90">{country}</p>}
+            <div className="flex items-center gap-4 mb-2">
+              {countryFlag && <span className="text-6xl filter drop-shadow-lg">{countryFlag}</span>}
+              <div className="flex-1">
+                <h2 className="text-4xl font-extrabold tracking-tight leading-tight" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                  {title}
+                </h2>
+                {country && (
+                  <p className="text-xl opacity-90 font-medium mt-1">{country}</p>
+                )}
               </div>
             </div>
           </div>
 
           {/* Main Stats */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <div className="text-6xl font-bold mb-2">{mainStat}</div>
-              <div className="text-2xl opacity-90">{mainStatLabel}</div>
+              <div className="text-7xl font-black mb-3 tracking-tight" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.3)', lineHeight: '1' }}>
+                {mainStat}
+              </div>
+              <div className="text-2xl font-semibold opacity-95 tracking-wide">{mainStatLabel}</div>
               {change && (
-                <div className="text-xl mt-2 inline-block bg-white/20 px-4 py-2 rounded-full">
+                <div className="text-lg mt-3 inline-flex items-center gap-2 bg-white/25 backdrop-blur-sm px-5 py-2.5 rounded-full font-semibold" style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
                   {change}
                 </div>
               )}
             </div>
 
             {secondaryStat && (
-              <div>
-                <div className="text-3xl font-semibold">{secondaryStat}</div>
-                <div className="text-lg opacity-80">{secondaryStatLabel}</div>
+              <div className="pt-2">
+                <div className="text-4xl font-bold mb-1.5" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                  {secondaryStat}
+                </div>
+                <div className="text-xl opacity-90 font-medium">{secondaryStatLabel}</div>
               </div>
             )}
 
             {game && (
-              <div className="text-xl bg-white/20 inline-block px-4 py-2 rounded-full">
+              <div className="inline-flex items-center gap-2 text-lg bg-white/25 backdrop-blur-sm px-5 py-2.5 rounded-full font-semibold" style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
                 🎮 {game}
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-6 border-t border-white/20">
-            <div className="text-2xl font-bold">wikigames.org</div>
-            <div className="text-sm opacity-80">Live Analytics</div>
+          <div className="flex items-center justify-between pt-6 border-t border-white/30">
+            <div className="text-3xl font-black tracking-tight" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+              wikigames.org
+            </div>
+            <div className="text-base opacity-90 font-semibold px-3 py-1 bg-white/20 rounded-full">
+              Live Analytics
+            </div>
           </div>
         </div>
       </div>
