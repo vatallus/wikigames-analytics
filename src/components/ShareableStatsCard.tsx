@@ -173,21 +173,9 @@ export function ShareableStatsCard({
             </Button>
           </div>
 
-          <div className="mt-4 p-4 bg-gradient-to-r from-primary/10 via-blue-500/10 to-purple-500/10 rounded-lg border border-primary/20">
-            <p className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-              🚀 <span className="bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-transparent">Help Us Reach 10,000 Gamers!</span>
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              <strong>Share this card</strong> lên Facebook, Twitter, Discord của bạn!<br />
-              Mỗi share giúp chúng tôi grow và cải thiện tool miễn phí này. 
-              <strong className="text-primary"> Together we can!</strong> 💪✨
-            </p>
-            <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
-              <span className="px-2 py-1 bg-primary/10 rounded">📈 9,847 shares</span>
-              <span className="px-2 py-1 bg-green-500/10 rounded">🎯 Target: 10,000</span>
-              <span className="px-2 py-1 bg-orange-500/10 rounded">⚡ 153 to go!</span>
-            </div>
-          </div>
+          <p className="text-sm text-muted-foreground mt-3">
+            💡 Share this to social media and help gamers discover real-time analytics!
+          </p>
         </CardContent>
       </Card>
     </div>

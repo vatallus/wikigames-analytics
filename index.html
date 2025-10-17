@@ -47,12 +47,13 @@
     <meta name="language" content="English" />
     <meta name="revisit-after" content="1 days" />
     
-    <!-- Schema.org JSON-LD -->
+    <!-- Schema.org JSON-LD - WebApplication -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "WikiGames Analytics",
+      "alternateName": "WikiGames",
       "description": "Real-time gaming analytics and player statistics dashboard for esports and competitive gaming",
       "url": "https://wikigames.org",
       "applicationCategory": "UtilityApplication",
@@ -61,15 +62,102 @@
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
       "screenshot": "https://wikigames.org/og-image.png",
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.8",
-        "ratingCount": "1250"
+        "ratingCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
       },
-      "featureList": "Real-time player tracking, Multi-game analytics, Tournament updates, Favorites system, Notifications"
+      "featureList": [
+        "Real-time player tracking",
+        "Multi-game analytics (CS:GO, Dota 2, PUBG, Valorant)",
+        "Tournament updates and notifications",
+        "Favorites system",
+        "Push notifications",
+        "Shareable stat cards",
+        "Leaderboards and rankings"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "WikiGames",
+        "url": "https://wikigames.org"
+      },
+      "datePublished": "2024-01-01",
+      "dateModified": "2025-10-17",
+      "inLanguage": "en",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://wikigames.org/discover?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Schema.org JSON-LD - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "WikiGames",
+      "url": "https://wikigames.org",
+      "logo": "https://wikigames.org/og-image.png",
+      "sameAs": [
+        "https://twitter.com/wikigames",
+        "https://facebook.com/wikigames",
+        "https://discord.gg/wikigames"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "availableLanguage": ["en", "vi"]
+      }
+    }
+    </script>
+
+    <!-- Schema.org JSON-LD - FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is WikiGames?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WikiGames is a free real-time gaming analytics dashboard that tracks player counts, tournament updates, and gaming news for popular games like CS:GO, Dota 2, PUBG, Valorant, and more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is WikiGames free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, WikiGames is completely free to use. All features including real-time player tracking, analytics, and shareable stat cards are available at no cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which games does WikiGames support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WikiGames supports all major games including Counter-Strike: Global Offensive (CS:GO), Dota 2, PUBG, Valorant, League of Legends, Apex Legends, and many more popular esports titles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I create shareable gaming stats cards?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Visit the Share page at wikigames.org/share-test to create beautiful stat cards. Simply choose your game, download the image, and share it on Twitter, Facebook, or Discord."
+          }
+        }
+      ]
     }
     </script>
   </head>

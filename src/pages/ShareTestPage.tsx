@@ -1,4 +1,5 @@
 import { ShareableStatsCard } from '@/components/ShareableStatsCard'
+import { SEO } from '@/components/SEO'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Sparkles, TrendingUp, Share2, Download, Zap } from 'lucide-react'
@@ -8,7 +9,15 @@ export function ShareTestPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-violet-500/10 via-background to-background py-8 px-4">
+    <>
+      <SEO
+        title="Share Gaming Stats - Create Viral Social Media Cards | WikiGames"
+        description="Create stunning shareable stat cards for CS:GO, Dota 2, and more. Download high-quality images for Twitter, Facebook, Discord. Free viral marketing tool for gamers and streamers."
+        keywords="gaming stats cards, shareable gaming stats, esports graphics, gaming social media, viral gaming content, CS:GO stats image, Dota 2 stats card, gaming marketing tools, streamer tools, gaming content creator"
+        image="https://wikigames.org/share-preview.png"
+        canonical="https://wikigames.org/share-test"
+      />
+      <div className="min-h-screen bg-gradient-to-b from-violet-500/10 via-background to-background py-8 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Hero Header */}
         <div className="text-center space-y-4">
@@ -222,6 +231,7 @@ export function ShareTestPage() {
           <p>💡 <strong>Pro Tip:</strong> Post 1 card/day = 100 shares/month = 5,000 visitors = First $100!</p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
