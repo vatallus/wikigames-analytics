@@ -139,10 +139,10 @@ export function BlogPage() {
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Khám phá thế giới gaming với những bài viết chuyên sâu về thống kê game, xu hướng esports, 
-              hướng dẫn công cụ và phân tích chi tiết các tựa game hot nhất.
+              Discover the world of gaming through in-depth articles about game statistics, esports trends, 
+              tool guides, and detailed analysis of the hottest titles.
               <br />
-              <strong>Miễn phí 100%</strong> • <strong>10+ bài viết hay</strong> • <strong>Cập nhật liên tục</strong>
+              <strong>100% Free</strong> • <strong>10+ Quality Articles</strong> • <strong>Regular Updates</strong>
             </p>
 
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
