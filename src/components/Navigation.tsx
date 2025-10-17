@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, BarChart3, Trophy, Sparkles, User, Share2, BookOpen } from 'lucide-react'
+import { Home, BarChart3, Trophy, Sparkles, User, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navigation = [
@@ -8,7 +8,6 @@ const navigation = [
   { name: 'Leaderboards', href: '/leaderboards', icon: Trophy },
   { name: 'Discover', href: '/discover', icon: Sparkles },
   { name: 'Blog', href: '/blog', icon: BookOpen },
-  { name: 'Share', href: '/share-test', icon: Share2 },
   { name: 'Profile', href: '/profile', icon: User },
 ]
 

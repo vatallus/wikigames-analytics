@@ -264,9 +264,9 @@ export function BlogPage() {
                     Start Tracking
                   </Button>
                 </Link>
-                <Link to="/share-test">
+                <Link to="/analytics">
                   <Button size="lg" variant="outline">
-                    Create Stat Cards
+                    View Analytics
                   </Button>
                 </Link>
               </div>

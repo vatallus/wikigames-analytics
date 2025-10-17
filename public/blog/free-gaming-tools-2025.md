@@ -74,16 +74,7 @@ Here are the best completely free gaming tools in 2025 - no hidden costs, no sub
 
 ## Social Media Tools
 
-### 12. WikiGames Stat Cards
-**What:** Shareable gaming graphics
-**Features:**
-- Download stat cards
-- Social media ready
-- Professional design
-**Price:** Free
-**Link:** https://wikigames.org/share-test
-
-### 13. Canva Free
+### 12. Canva Free
 **What:** Graphic design
 **Price:** Free tier
 
