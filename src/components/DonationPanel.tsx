@@ -16,7 +16,7 @@ interface DonationPanelProps {
 // Crypto wallet addresses - UPDATE THESE WITH YOUR REAL WALLETS!
 const WALLET_ADDRESSES = {
   usdt_trc20: {
-    address: 'YOUR_USDT_TRC20_ADDRESS_HERE',
+    address: 'TRTy1Y71L9KfsVScgYnnkbw9f3Vd3DgiJx',
     network: 'TRC20 (Tron)',
     name: 'USDT (TRC20)',
     icon: '₮',
@@ -24,7 +24,7 @@ const WALLET_ADDRESSES = {
     recommended: true as const
   },
   btc: {
-    address: 'YOUR_BTC_ADDRESS_HERE',
+    address: '359LKA6LNK8WHAzgAHteXMadH2vkoFXkxM',
     network: 'Bitcoin Network',
     name: 'Bitcoin (BTC)',
     icon: '₿',
@@ -32,7 +32,7 @@ const WALLET_ADDRESSES = {
     recommended: false as const
   },
   eth: {
-    address: 'YOUR_ETH_ADDRESS_HERE',
+    address: '0x234eae962c79b2207338fac019e980959561a63f',
     network: 'Ethereum Network',
     name: 'Ethereum (ETH)',
     icon: 'Ξ',
@@ -40,7 +40,7 @@ const WALLET_ADDRESSES = {
     recommended: false as const
   },
   bnb: {
-    address: 'YOUR_BNB_ADDRESS_HERE',
+    address: '0x883dfff63fed12918f9dfced682d191ebac489cc',
     network: 'BNB Smart Chain',
     name: 'BNB (BSC)',
     icon: 'B',
