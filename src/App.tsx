@@ -15,6 +15,7 @@ import { LeaderboardsPage } from './pages/LeaderboardsPage'
 import { DiscoverPage } from './pages/DiscoverPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { DonateConfirmPage } from './pages/DonateConfirmPage'
+import { ShareTestPage } from './pages/ShareTestPage'
 import { useRealTimeData } from './hooks/useRealTimeData'
 import { useNotifications } from './hooks/useNotifications'
 
@@ -178,6 +179,7 @@ function App() {
             <Route path="/discover" element={<DiscoverPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/donate/confirm" element={<DonateConfirmPage />} />
+            <Route path="/share-test" element={<ShareTestPage />} />
           </Routes>        </main>
 
         {/* Footer */}
