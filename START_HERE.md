@@ -14,6 +14,7 @@
 ```bash
 □ 1. Test ShareableStatsCard
    npm run dev
+   → Vào: http://localhost:5173/share-test
    → Test download image
    → Test share buttons
    → Fix any bugs
