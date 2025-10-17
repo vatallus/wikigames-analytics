@@ -16,6 +16,8 @@ interface BlogPostMeta {
   category: string
   keywords: string[]
   published: string
+  thumbnail?: string
+  author?: string
 }
 
 const blogPostsMeta: Record<string, BlogPostMeta> = {
@@ -25,7 +27,9 @@ const blogPostsMeta: Record<string, BlogPostMeta> = {
     readTime: '9 min',
     category: 'Comparisons',
     keywords: ['Valorant', 'CS:GO', 'FPS', 'Comparison'],
-    published: 'October 17, 2025'
+    published: 'October 17, 2025',
+    thumbnail: '/blog/images/valorant-vs-csgo.jpg',
+    author: 'WikiGames Team'
   },
   'csgo-player-count-guide': {
     title: 'CS:GO Player Count 2025: Real-time Tracking Guide',
@@ -33,7 +37,9 @@ const blogPostsMeta: Record<string, BlogPostMeta> = {
     readTime: '6 min',
     category: 'Statistics',
     keywords: ['CS:GO', 'Player Count', 'Statistics'],
-    published: 'October 17, 2025'
+    published: 'October 17, 2025',
+    thumbnail: '/blog/images/csgo-stats.jpg',
+    author: 'WikiGames Team'
   },
   'dota2-statistics-complete-guide': {
     title: 'Dota 2 Statistics 2025: Complete Analytics Guide',
@@ -41,7 +47,9 @@ const blogPostsMeta: Record<string, BlogPostMeta> = {
     readTime: '7 min',
     category: 'Statistics',
     keywords: ['Dota 2', 'Analytics', 'Statistics'],
-    published: 'October 17, 2025'
+    published: 'October 17, 2025',
+    thumbnail: '/blog/images/dota2-stats.jpg',
+    author: 'WikiGames Team'
   },
   'steam-player-count-tracking': {
     title: 'Steam Player Count Tracking: Complete Guide',
@@ -223,9 +231,24 @@ export function BlogPostPage() {
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
               {meta.title}
             </h1>
+
+            {/* Thumbnail Image */}
+            {meta.thumbnail && (
+              <div className="mb-6 rounded-xl overflow-hidden">
+                <img 
+                  src={meta.thumbnail} 
+                  alt={meta.title}
+                  className="w-full h-auto object-cover"
+                  onError={(e) => {
+                    // Hide image if it fails to load
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
 
             <p className="text-xl text-muted-foreground mb-6">
               {meta.description}

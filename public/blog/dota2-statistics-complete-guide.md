@@ -6,6 +6,9 @@
 
 Dota 2 remains one of the most popular MOBAs in 2025 with a massive global player base.
 
+<!-- Example: Uncomment when you have the image -->
+<!-- ![Dota 2 Player Statistics](/blog/images/dota2-banner.jpg) -->
+
 ## Current Dota 2 Stats (October 2025)
 
 - **Peak Concurrent Players:** 850,000+
