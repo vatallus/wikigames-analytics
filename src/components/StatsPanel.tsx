@@ -1,11 +1,14 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
-import { TrendingUp, Users, Globe, Gamepad2 } from 'lucide-react'
+import { Button } from './ui/button'
+import { TrendingUp, Users, Globe, Gamepad2, Share2 } from 'lucide-react'
 import { Game, CountryData, COUNTRY_DATA, getTotalPlayersForGame, getTopCountriesForGame } from '@/data/mockData'
 import { GameDetails } from './GameDetails'
+import { ShareableStatsCard } from './ShareableStatsCard'
 import { formatNumber } from '@/lib/utils'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface StatsPanelProps {
   selectedGame: Game | null
