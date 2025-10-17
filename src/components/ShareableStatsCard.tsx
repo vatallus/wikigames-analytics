@@ -124,8 +124,8 @@ export function ShareableStatsCard({
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-6 border-t border-white/20">
-            <div className="text-xl font-semibold">wikigames.org</div>
-            <div className="text-lg opacity-80">Real-time Gaming Analytics</div>
+            <div className="text-2xl font-bold">wikigames.org</div>
+            <div className="text-sm opacity-80">Live Analytics</div>
           </div>
         </div>
       </div>
