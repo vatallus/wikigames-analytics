@@ -183,6 +183,299 @@ export function GameIcon({ gameId, size = 32, className = '' }: GameIconProps) {
         <text x="16" y="23" fontFamily="Arial Black" fontSize="18" fontWeight="900" fill="white" textAnchor="middle">F1</text>
       </svg>
     ),
+
+    // New 30 games logos (csgo already defined above)
+    'apex': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="apexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#DA291C" />
+            <stop offset="100%" stopColor="#8B0000" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="#000" />
+        <path d="M16 4 L8 14 L10 24 L22 24 L24 14 Z" fill="url(#apexGrad)" />
+        <path d="M16 8 L12 14 L14 20 L18 20 L20 14 Z" fill="#000" />
+      </svg>
+    ),
+    'tf2': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="tf2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#CF6A32" />
+            <stop offset="100%" stopColor="#9B4F24" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#tf2Grad)" />
+        <text x="16" y="23" fontFamily="Arial Black" fontSize="12" fontWeight="900" fill="white" textAnchor="middle">TF2</text>
+      </svg>
+    ),
+    'cod-warzone': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#000" />
+        <circle cx="16" cy="16" r="8" fill="none" stroke="#5CDB5C" strokeWidth="2" />
+        <line x1="16" y1="8" x2="16" y2="24" stroke="#5CDB5C" strokeWidth="2" />
+        <line x1="8" y1="16" x2="24" y2="16" stroke="#5CDB5C" strokeWidth="2" />
+      </svg>
+    ),
+    'destiny2': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#1a1a1a" />
+        <circle cx="16" cy="16" r="10" fill="none" stroke="#A3D9E9" strokeWidth="2" />
+        <path d="M16 6 L16 26 M11 11 L21 21 M11 21 L21 11" stroke="#A3D9E9" strokeWidth="2" />
+      </svg>
+    ),
+    'paladins': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="paladinsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FF8C00" />
+            <stop offset="100%" stopColor="#FF4500" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#paladinsGrad)" />
+        <circle cx="16" cy="16" r="8" fill="white" opacity="0.9" />
+        <circle cx="16" cy="16" r="4" fill="url(#paladinsGrad)" />
+      </svg>
+    ),
+    'smite': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#2D2D2D" />
+        <path d="M16 6 L22 16 L16 26 L10 16 Z" fill="#00AEEF" />
+        <circle cx="16" cy="16" r="3" fill="white" />
+      </svg>
+    ),
+    'naraka': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="narakaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#DC143C" />
+            <stop offset="100%" stopColor="#8B0000" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="#1a1a1a" />
+        <path d="M16 6 L24 16 L16 12 L8 16 Z" fill="url(#narakaGrad)" />
+        <path d="M16 12 L24 16 L16 26 L8 16 Z" fill="url(#narakaGrad)" opacity="0.7" />
+      </svg>
+    ),
+    'rust': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="rustGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#CE422B" />
+            <stop offset="100%" stopColor="#8B2A1B" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#rustGrad)" />
+        <circle cx="16" cy="16" r="8" fill="none" stroke="white" strokeWidth="2" />
+        <rect x="12" y="12" width="8" height="8" fill="white" />
+      </svg>
+    ),
+    'ark': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#1F4529" />
+        <path d="M16 6 L24 26 L8 26 Z" fill="#5CB85C" />
+        <path d="M16 12 L20 22 L12 22 Z" fill="#1F4529" />
+      </svg>
+    ),
+    'valheim': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#2C3E50" />
+        <circle cx="16" cy="16" r="10" fill="none" stroke="#ECF0F1" strokeWidth="2" />
+        <path d="M16 6 L16 26 M6 16 L26 16" stroke="#ECF0F1" strokeWidth="2" />
+      </svg>
+    ),
+    'enshrouded': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="enshroudedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#6A0DAD" />
+            <stop offset="100%" stopColor="#4B0082" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#enshroudedGrad)" />
+        <circle cx="16" cy="16" r="6" fill="white" opacity="0.3" />
+      </svg>
+    ),
+    'palworld': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="palworldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#4A90E2" />
+            <stop offset="100%" stopColor="#357ABD" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#palworldGrad)" />
+        <circle cx="16" cy="14" r="6" fill="white" />
+        <ellipse cx="16" cy="22" rx="8" ry="4" fill="white" />
+      </svg>
+    ),
+    'lost-ark': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="lostarkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFD700" />
+            <stop offset="100%" stopColor="#FFA500" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="#1a1a1a" />
+        <path d="M16 4 L20 12 L28 14 L22 20 L24 28 L16 24 L8 28 L10 20 L4 14 L12 12 Z" fill="url(#lostarkGrad)" />
+      </svg>
+    ),
+    'new-world': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="newworldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#8B4513" />
+            <stop offset="100%" stopColor="#654321" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#newworldGrad)" />
+        <circle cx="16" cy="16" r="8" fill="none" stroke="#FFD700" strokeWidth="2" />
+        <path d="M16 8 L18 14 L24 14 L19 18 L21 24 L16 20 L11 24 L13 18 L8 14 L14 14 Z" fill="#FFD700" />
+      </svg>
+    ),
+    'albion': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#2C3E50" />
+        <path d="M16 6 L22 16 L16 22 L10 16 Z" fill="#3498DB" />
+        <path d="M16 10 L19 16 L16 19 L13 16 Z" fill="white" />
+      </svg>
+    ),
+    'warframe': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#1a1a1a" />
+        <path d="M16 4 L24 16 L16 28 L8 16 Z" fill="#34A7C1" />
+        <path d="M16 8 L20 16 L16 24 L12 16 Z" fill="#1a1a1a" />
+      </svg>
+    ),
+    'hoi4': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="hoi4Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#8B0000" />
+            <stop offset="100%" stopColor="#DC143C" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#hoi4Grad)" />
+        <text x="16" y="20" fontFamily="serif" fontSize="10" fontWeight="bold" fill="white" textAnchor="middle">HOI4</text>
+      </svg>
+    ),
+    'civ6': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="civ6Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#4169E1" />
+            <stop offset="100%" stopColor="#191970" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#civ6Grad)" />
+        <path d="M8 16 L16 8 L24 16 L16 24 Z" fill="white" />
+        <path d="M12 16 L16 12 L20 16 L16 20 Z" fill="url(#civ6Grad)" />
+      </svg>
+    ),
+    'aoe2': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="aoe2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#8B4513" />
+            <stop offset="100%" stopColor="#654321" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#aoe2Grad)" />
+        <path d="M16 6 L20 12 L16 18 L12 12 Z" fill="#FFD700" />
+        <rect x="12" y="18" width="8" height="8" fill="#FFD700" />
+      </svg>
+    ),
+    'fifa23': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="fifa23Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00A0DC" />
+            <stop offset="100%" stopColor="#0077B6" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#fifa23Grad)" />
+        <circle cx="16" cy="16" r="8" fill="white" />
+        <path d="M16 8 L18 14 L24 14 L19 18 L21 24 L16 20 L11 24 L13 18 L8 14 L14 14 Z" fill="url(#fifa23Grad)" />
+      </svg>
+    ),
+    'f1-23': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="f123Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#E10600" />
+            <stop offset="100%" stopColor="#B00500" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#f123Grad)" />
+        <text x="16" y="23" fontFamily="Arial Black" fontSize="18" fontWeight="900" fill="white" textAnchor="middle">F1</text>
+      </svg>
+    ),
+    'iracing': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="iracingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#005CAB" />
+            <stop offset="100%" stopColor="#003A70" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#iracingGrad)" />
+        <text x="16" y="21" fontFamily="Arial Black" fontSize="12" fontWeight="900" fill="white" textAnchor="middle">iR</text>
+      </svg>
+    ),
+    'gta5': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#1a1a1a" />
+        <text x="16" y="20" fontFamily="Pricedown, Arial Black" fontSize="14" fontWeight="900" fill="#00FF00" textAnchor="middle">GTA</text>
+      </svg>
+    ),
+    'rocketleague': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="rlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0077FF" />
+            <stop offset="100%" stopColor="#004ECC" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#rlGrad)" />
+        <circle cx="16" cy="16" r="8" fill="white" />
+        <circle cx="16" cy="16" r="4" fill="url(#rlGrad)" />
+      </svg>
+    ),
+    'terraria': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="terrariaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#6A9955" />
+            <stop offset="100%" stopColor="#4A7735" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#terrariaGrad)" />
+        <path d="M8 24 L16 8 L24 24 Z" fill="#8B4513" />
+        <rect x="14" y="20" width="4" height="4" fill="#654321" />
+      </svg>
+    ),
+    'unturned': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <rect width="32" height="32" rx="6" fill="#2C3E50" />
+        <circle cx="16" cy="16" r="8" fill="#27AE60" />
+        <path d="M16 8 L20 16 L16 24 L12 16 Z" fill="white" />
+      </svg>
+    ),
+    'war-thunder': (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+        <defs>
+          <linearGradient id="wtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#4A4A4A" />
+            <stop offset="100%" stopColor="#2A2A2A" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="6" fill="url(#wtGrad)" />
+        <path d="M16 6 L24 16 L16 12 L8 16 Z" fill="#FF4500" />
+        <circle cx="16" cy="20" r="4" fill="#FF4500" />
+      </svg>
+    ),
   }
 
   return icons[gameId] || (

@@ -2,11 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { Users, ThumbsUp, ThumbsDown, Clock, DollarSign, Tag } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { ShareButton } from './ShareButton'
 
 interface GameDetailsProps {
   game: {
     gameName: string
     currentPlayers: number
+    trend?: 'up' | 'down' | 'stable'
     owners?: string
     positiveReviews?: number
     negativeReviews?: number
@@ -51,7 +53,18 @@ export function GameDetails({ game }: GameDetailsProps) {
     >
       <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-card to-card/50">
         <CardHeader>
-          <CardTitle className="text-xl">{game.gameName}</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl">{game.gameName}</CardTitle>
+            <ShareButton
+              title={`${game.gameName} Stats - WikiGames`}
+              text={`🎮 ${game.gameName} has ${game.currentPlayers.toLocaleString()} players online right now!`}
+              gameData={{
+                name: game.gameName,
+                players: game.currentPlayers,
+                trend: game.trend
+              }}
+            />
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Current Players */}

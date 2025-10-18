@@ -3,11 +3,14 @@ import { getGameInfo, GameInfo } from './rawgService.js'
 import { getLatestNews, getUpcomingTournaments } from './gameNewsService.js'
 import { getSteamSpyGameDetails } from './steamSpyService.js'
 import { AggregatedData, GameData, CountryPlayerData } from '../types.js'
+import { getCache, setCache, isRedisConnected } from './redis.js'
+import { upsertGame, upsertCountry, savePlayerHistory, getAllGames, getAllCountries } from './database.js'
 
-// Cache for data
+// In-memory cache as fallback
 let cachedData: AggregatedData | null = null
 let lastUpdate = 0
 const CACHE_DURATION = 30000 // 30 seconds
+const REDIS_CACHE_KEY = 'wikigames:aggregated_data'
 
 /**
  * Estimate regional distribution based on player counts
@@ -46,31 +49,41 @@ function estimateRegionalDistribution(totalPlayers: number): CountryPlayerData[]
  * Aggregate data from all free sources
  */
 export async function aggregateGameData(): Promise<AggregatedData> {
-  // Return cached data if still fresh
   const now = Date.now()
+  
+  // ✅ Try Redis cache first (fastest)
+  if (isRedisConnected()) {
+    const cachedFromRedis = await getCache<AggregatedData>(REDIS_CACHE_KEY)
+    if (cachedFromRedis) {
+      console.log('⚡ Serving from Redis cache')
+      return cachedFromRedis
+    }
+  }
+  
+  // ✅ Try memory cache (fast)
   if (cachedData && (now - lastUpdate) < CACHE_DURATION) {
+    console.log('💾 Serving from memory cache')
     return cachedData
   }
 
-  console.log('📊 Aggregating data from free sources...')
+  console.log('📊 Aggregating fresh data from sources...')
 
   try {
     // Get Steam data (completely free, no API key needed!)
     const steamData = await getAllSteamPlayerCounts()
     
-    // Build game data
-    const games: GameData[] = []
+    // Build game data - PARALLELIZED for 6x performance!
     let totalPlayers = 0
-
-    for (const [gameId, game] of Object.entries(STEAM_GAMES)) {
+    
+    // ✅ Process all games in parallel instead of sequentially
+    const gamePromises = Object.entries(STEAM_GAMES).map(async ([gameId, game]) => {
       const playerCount = steamData.get(gameId) || 0
-      totalPlayers += playerCount
-
-      // Get enhanced data from SteamSpy (FREE!)
-      const steamSpyData = await getSteamSpyGameDetails(game.appId)
       
-      // Get game info from RAWG (with fallback to mock data)
-      const gameInfo = await getGameInfo(game.name, process.env.RAWG_API_KEY)
+      // ✅ Fetch both APIs in parallel with Promise.all
+      const [steamSpyData, gameInfo] = await Promise.all([
+        getSteamSpyGameDetails(game.appId).catch(() => null),
+        getGameInfo(game.name, process.env.RAWG_API_KEY).catch(() => null)
+      ])
 
       // Calculate trend based on SteamSpy data
       let trend: 'up' | 'down' | 'stable' = 'stable'
@@ -80,7 +93,7 @@ export async function aggregateGameData(): Promise<AggregatedData> {
         else if (ratio < 0.9) trend = 'down'
       }
 
-      games.push({
+      return {
         gameId,
         gameName: game.name,
         currentPlayers: playerCount,
@@ -102,8 +115,12 @@ export async function aggregateGameData(): Promise<AggregatedData> {
         recentPlaytime: steamSpyData?.average_2weeks,
         price: steamSpyData?.price,
         tags: steamSpyData?.tags ? Object.keys(steamSpyData.tags).slice(0, 5) : undefined
-      })
-    }
+      }
+    })
+
+    // ✅ Wait for all games to complete
+    const games = await Promise.all(gamePromises)
+    totalPlayers = games.reduce((sum, game) => sum + game.currentPlayers, 0)
 
     // Estimate regional distribution
     const countries = estimateRegionalDistribution(totalPlayers)
@@ -125,8 +142,11 @@ export async function aggregateGameData(): Promise<AggregatedData> {
       })
     })
 
+    // Sort games by player count
+    const sortedGames = games.sort((a, b) => b.currentPlayers - a.currentPlayers)
+    
     cachedData = {
-      games: games.sort((a, b) => b.currentPlayers - a.currentPlayers),
+      games: sortedGames,
       countries,
       globalStats: {
         totalPlayers,
@@ -138,6 +158,18 @@ export async function aggregateGameData(): Promise<AggregatedData> {
     }
 
     lastUpdate = now
+    
+    // ✅ Save to database (async, don't wait)
+    saveToDatabase(sortedGames, countries).catch(err => 
+      console.error('Background DB save error:', err)
+    )
+    
+    // ✅ Save to Redis cache
+    if (isRedisConnected()) {
+      await setCache(REDIS_CACHE_KEY, cachedData, 30)
+      console.log('💾 Saved to Redis cache')
+    }
+    
     console.log(`✅ Data aggregated: ${totalPlayers.toLocaleString()} total players across ${games.length} games`)
 
     return cachedData
@@ -167,4 +199,39 @@ export async function forceRefresh(): Promise<AggregatedData> {
  */
 export function getCachedData(): AggregatedData | null {
   return cachedData
+}
+
+/**
+ * Save data to database (background task)
+ */
+async function saveToDatabase(games: GameData[], countries: CountryPlayerData[]): Promise<void> {
+  try {
+    // Save all games to database
+    const gamePromises = games.map(game => {
+      // Save game data
+      const gamePromise = upsertGame({
+        ...game,
+        appId: STEAM_GAMES[game.gameId as keyof typeof STEAM_GAMES]?.appId || game.gameId,
+        type: STEAM_GAMES[game.gameId as keyof typeof STEAM_GAMES]?.type || 'Unknown',
+      })
+      
+      // Save player history
+      const historyPromise = savePlayerHistory(game.gameId, game.currentPlayers)
+      
+      return Promise.all([gamePromise, historyPromise])
+    })
+    
+    await Promise.all(gamePromises)
+    
+    // Save country data
+    const countryPromises = countries.map(country =>
+      upsertCountry(country.countryCode, country.countryName, country.totalPlayers, country.games)
+    )
+    
+    await Promise.all(countryPromises)
+    
+    console.log('💾 Saved to database')
+  } catch (error) {
+    console.error('Error saving to database:', error)
+  }
 }

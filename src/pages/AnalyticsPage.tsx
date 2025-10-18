@@ -55,96 +55,45 @@ export function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Header with Gradient Background */}
-      <div className="relative bg-gradient-to-br from-violet-500/10 via-blue-500/10 to-cyan-500/10 border-b">
-        <div className="absolute inset-0 bg-grid-white/5" />
-        <div className="relative container mx-auto px-4 py-16 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/20 to-blue-500/20 backdrop-blur-sm border border-primary/20 mb-6">
-            <BarChart3 className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-transparent">
-              Advanced Analytics
-            </span>
-          </div>
-          
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent leading-tight">
-            Gaming Analytics
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-            Real-time player statistics, peak hours analysis, and comprehensive game performance metrics
-          </p>
-
-          {/* Quick Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-background/50 backdrop-blur-sm border border-border">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="font-medium">Live Data</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-background/50 backdrop-blur-sm border border-border">
-              <span className="font-semibold text-primary">{data.games.length}+</span>
-              <span className="text-muted-foreground">Games Tracked</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-background/50 backdrop-blur-sm border border-border">
-              <span className="font-semibold text-primary">24/7</span>
-              <span className="text-muted-foreground">Monitoring</span>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="text-center py-6">
+        <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+          Analytics Dashboard
+        </h1>
+        <p className="text-muted-foreground">
+          Deep dive into gaming statistics, trends, and comparisons
+        </p>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 space-y-12">
-        {/* Game Filter Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Select a Game</h2>
-            <p className="text-muted-foreground">Filter analytics by specific games or view all data</p>
-          </div>
+      {/* Main Layout: Sidebar + Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Sidebar - Game Filter */}
+        <div className="lg:col-span-3">
           <GameFilter
             onGameSelect={setSelectedGame}
             selectedGame={selectedGame}
           />
-        </section>
+        </div>
 
-        {/* Leaderboard Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Top Games Leaderboard</h2>
-            <p className="text-muted-foreground">Live rankings by current player count</p>
+        {/* Right Content - Charts */}
+        <div className="lg:col-span-9 space-y-6">
+          {/* Top Charts Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <GameLeaderboard games={data.games} />
+            
+            {selectedGame ? (
+              <PlayerTrendChart 
+                gameId={selectedGame.id} 
+                gameName={selectedGame.name}
+                currentPlayers={data.games.find(g => g.gameId === selectedGame.id)?.currentPlayers}
+              />
+            ) : (
+              <PlayerTrendChart />
+            )}
           </div>
-          <GameLeaderboard games={data.games} />
-        </section>
 
-        {/* Player Trend Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">
-              {selectedGame ? `${selectedGame.name} Player Trends` : 'Player Trends'}
-            </h2>
-            <p className="text-muted-foreground">
-              {selectedGame 
-                ? `Historical player count data for ${selectedGame.name}` 
-                : 'Select a game to view detailed trends'}
-            </p>
-          </div>
-          {selectedGame ? (
-            <PlayerTrendChart 
-              gameId={selectedGame.id} 
-              gameName={selectedGame.name}
-              currentPlayers={data.games.find(g => g.gameId === selectedGame.id)?.currentPlayers}
-            />
-          ) : (
-            <PlayerTrendChart />
-          )}
-        </section>
-
-        {/* Analysis Grid Section */}
-        <section>
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Deep Dive Analysis</h2>
-            <p className="text-muted-foreground">Peak hours and game comparisons</p>
-          </div>
+          {/* Bottom Charts Grid */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             <PeakHoursHeatmap 
               gameId={selectedGame?.id}
@@ -153,7 +102,7 @@ export function AnalyticsPage() {
             />
             <GameComparison games={data.games} />
           </div>
-        </section>
+        </div>
       </div>
     </div>
   )

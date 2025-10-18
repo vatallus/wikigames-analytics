@@ -32,10 +32,12 @@ export function useRealTimeData() {
       }
     }
     
+    // ✅ Only check once on mount - not every 10s!
+    // WebSocket will handle connection status
     checkServer()
-    const interval = setInterval(checkServer, 10000) // Check every 10s
     
-    return () => clearInterval(interval)
+    // ✅ Removed: const interval = setInterval(checkServer, 10000)
+    // This was causing 600 requests/min with 100 users!
   }, [])
 
   // Initial data fetch
@@ -109,44 +111,72 @@ export function useRealTimeData() {
     previousDataRef.current = newData
   }, [checkPlayerSpike, checkPlayerDrop, checkMilestone])
 
-  // WebSocket connection for real-time updates
+  // WebSocket connection for real-time updates with auto-reconnect
   useEffect(() => {
     if (!serverAvailable) return
 
-    const ws = createWebSocketConnection(
-      (newData) => {
-        // Detect changes and notify BEFORE setting data
-        detectChangesAndNotify(newData)
-        
-        setData(newData)
+    let reconnectAttempts = 0
+    const maxReconnectAttempts = 5
+    let reconnectTimeout: NodeJS.Timeout | null = null
+    let shouldReconnect = true
+
+    const connect = () => {
+      const ws = createWebSocketConnection(
+        (newData) => {
+          // Detect changes and notify BEFORE setting data
+          detectChangesAndNotify(newData)
+          
+          setData(newData)
+          setIsConnected(true)
+          setError(null)
+        },
+        (error) => {
+          console.error('WebSocket error:', error)
+          setIsConnected(false)
+          setError('Real-time connection lost')
+        }
+      )
+
+      wsRef.current = ws
+
+      ws.onopen = () => {
         setIsConnected(true)
-        setError(null)
-      },
-      (error) => {
-        console.error('WebSocket error:', error)
-        setIsConnected(false)
-        setError('Real-time connection lost')
+        reconnectAttempts = 0 // ✅ Reset on successful connection
+        console.log('✅ Real-time updates active')
       }
-    )
 
-    wsRef.current = ws
+      ws.onclose = () => {
+        setIsConnected(false)
+        console.log('❌ Real-time updates stopped')
+        
+        // ✅ Auto-reconnect with exponential backoff
+        if (shouldReconnect && reconnectAttempts < maxReconnectAttempts) {
+          const delay = Math.min(1000 * (2 ** reconnectAttempts), 30000)
+          reconnectAttempts++
+          
+          console.log(`🔄 Reconnecting in ${delay/1000}s... (Attempt ${reconnectAttempts}/${maxReconnectAttempts})`)
+          
+          reconnectTimeout = setTimeout(() => {
+            connect()
+          }, delay)
+        } else if (reconnectAttempts >= maxReconnectAttempts) {
+          setError('Connection lost. Please refresh the page.')
+        }
+      }
 
-    ws.onopen = () => {
-      setIsConnected(true)
-      console.log('✅ Real-time updates active')
+      return ws
     }
 
-    ws.onclose = () => {
-      setIsConnected(false)
-      console.log('❌ Real-time updates stopped')
-    }
+    connect()
 
     return () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.close()
+      shouldReconnect = false
+      if (reconnectTimeout) clearTimeout(reconnectTimeout)
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.close()
       }
     }
-  }, [serverAvailable])
+  }, [serverAvailable, detectChangesAndNotify])
 
   // Manual refresh function
   const refresh = useCallback(async () => {

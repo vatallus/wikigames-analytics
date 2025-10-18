@@ -1,5 +1,7 @@
 import express from 'express'
 import cors from 'cors'
+import compression from 'compression'
+import rateLimit from 'express-rate-limit'
 import { WebSocketServer } from 'ws'
 import { createServer } from 'http'
 import cron from 'node-cron'
@@ -11,9 +13,33 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// ✅ Rate limiting - prevent API abuse
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60, // 60 requests per minute per IP
+  message: { error: 'Too many requests, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 // Middleware
 app.use(cors())
 app.use(express.json())
+
+// ✅ Compression - reduce response size by ~80%
+app.use(compression({
+  level: 6, // Compression level 1-9 (6 is good balance)
+  threshold: 1024, // Only compress responses > 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false
+    }
+    return compression.filter(req, res)
+  }
+}))
+
+// ✅ Apply rate limiting to API routes only
+app.use('/api/', limiter)
 
 // Create HTTP server
 const server = createServer(app)
