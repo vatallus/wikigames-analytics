@@ -97,7 +97,7 @@ export async function getSteamGameDetails(appId: string) {
   try {
     const url = `https://store.steampowered.com/api/appdetails?appids=${appId}`
     const response = await fetch(url)
-    const data = await response.json()
+    const data = await response.json() as any
     return data[appId]?.data || null
   } catch (error) {
     console.error(`Error fetching Steam game details for ${appId}:`, error)
