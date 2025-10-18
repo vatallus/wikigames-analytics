@@ -25,7 +25,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, username: string) => Promise<void>
   signOut: () => Promise<void>
-  signInWith Provider: (provider: 'discord' | 'twitch') => Promise<void>
+  signInWithProvider: (provider: 'discord' | 'twitch') => Promise<void>
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>
 }
 

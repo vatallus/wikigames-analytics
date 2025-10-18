@@ -9,6 +9,8 @@ import { Navigation } from './components/Navigation'
 import { ParticleBackground } from './components/ParticleBackground'
 import { NotificationPanel } from './components/NotificationPanel'
 import { DonationPanel } from './components/DonationPanel'
+import { AuthProvider } from './contexts/AuthContext'
+import { AuthButtons } from './components/auth/AuthButtons'
 import { HomePage } from './pages/HomePage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { LeaderboardsPage } from './pages/LeaderboardsPage'
@@ -20,7 +22,7 @@ import { BlogPostPage } from './pages/BlogPostPage'
 import { useRealTimeData } from './hooks/useRealTimeData'
 import { useNotifications } from './hooks/useNotifications'
 
-function App() {
+function AppContent() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [notificationPanelOpen, setNotificationPanelOpen] = useState(false)
   const [donationPanelOpen, setDonationPanelOpen] = useState(false)
@@ -140,6 +142,9 @@ function App() {
                   )}
                 </Button>
 
+                {/* Auth Buttons */}
+                <AuthButtons />
+
                 {/* Refresh Button */}
                 <Button
                   variant="outline"
@@ -222,4 +227,11 @@ function App() {
   )
 }
 
-export default App
+// Wrap with AuthProvider
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  )
+}
