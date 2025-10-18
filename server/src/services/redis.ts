@@ -1,16 +1,37 @@
 import Redis from 'ioredis'
 
-// Initialize Redis client
-const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  password: process.env.REDIS_PASSWORD,
-  retryStrategy: (times) => {
-    const delay = Math.min(times * 50, 2000)
-    return delay
-  },
-  lazyConnect: true,
-})
+// Initialize Redis client - supports both local Redis and Upstash
+let redis: Redis
+
+if (process.env.UPSTASH_REDIS_REST_URL) {
+  // Use Upstash Redis (production)
+  const upstashUrl = process.env.UPSTASH_REDIS_REST_URL.replace('https://', '')
+  redis = new Redis({
+    host: upstashUrl,
+    port: 6379,
+    password: process.env.UPSTASH_REDIS_REST_TOKEN,
+    tls: {
+      rejectUnauthorized: false
+    },
+    retryStrategy: (times) => {
+      const delay = Math.min(times * 50, 2000)
+      return delay
+    },
+    lazyConnect: true,
+  })
+} else {
+  // Use local Redis (development)
+  redis = new Redis({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT || '6379'),
+    password: process.env.REDIS_PASSWORD,
+    retryStrategy: (times) => {
+      const delay = Math.min(times * 50, 2000)
+      return delay
+    },
+    lazyConnect: true,
+  })
+}
 
 // Connect to Redis
 redis.connect().catch((err) => {
