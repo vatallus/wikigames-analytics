@@ -37,6 +37,11 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+      
+      - name: 'notify vercel'
+        uses: 'vercel/repository-dispatch/actions/status@v1'
+        with:
+          name: 'Vercel - wikigames-analytics: lint'
 
   deploy:
     environment:
