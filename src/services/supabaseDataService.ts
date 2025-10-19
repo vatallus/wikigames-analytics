@@ -3,13 +3,17 @@ import { AggregatedDataResponse } from './apiService'
 
 export interface GameData {
   id: string
-  app_id: string
+  appId?: string
+  app_id?: string
   name: string
   type: string
-  current_players: number
-  peak_players_24h: number
+  currentPlayers?: number
+  current_players?: number
+  peakPlayers24h?: number
+  peak_players_24h?: number
   trend: string
-  last_update: string
+  lastUpdate?: string
+  last_update?: string
   description?: string
   rating?: number
   metacritic?: number
@@ -17,8 +21,11 @@ export interface GameData {
   tags?: string[]
   image?: string
   owners?: string
+  positiveReviews?: number
   positive_reviews?: number
+  negativeReviews?: number
   negative_reviews?: number
+  averagePlaytime?: number
   average_playtime?: number
   price?: string
 }
@@ -27,9 +34,12 @@ export interface CountryData {
   id: number
   code: string
   name: string
-  total_players: number
-  games_data: Record<string, { playerCount: number; playRate: number }>
-  last_update: string
+  totalPlayers?: number
+  total_players?: number
+  gamesData?: Record<string, { playerCount: number; playRate: number }>
+  games_data?: Record<string, { playerCount: number; playRate: number }>
+  lastUpdate?: string
+  last_update?: string
 }
 
 /**
@@ -37,9 +47,9 @@ export interface CountryData {
  */
 export async function fetchGamesFromSupabase(): Promise<GameData[]> {
   const { data, error } = await supabase
-    .from('games')
+    .from('Game')
     .select('*')
-    .order('current_players', { ascending: false })
+    .order('currentPlayers', { ascending: false })
 
   if (error) {
     console.error('Error fetching games:', error)
@@ -54,9 +64,9 @@ export async function fetchGamesFromSupabase(): Promise<GameData[]> {
  */
 export async function fetchCountriesFromSupabase(): Promise<CountryData[]> {
   const { data, error } = await supabase
-    .from('countries')
+    .from('Country')
     .select('*')
-    .order('total_players', { ascending: false })
+    .order('totalPlayers', { ascending: false })
 
   if (error) {
     console.error('Error fetching countries:', error)
@@ -71,9 +81,9 @@ export async function fetchCountriesFromSupabase(): Promise<CountryData[]> {
  */
 export async function fetchPlayerHistory(gameId: string, limit: number = 100) {
   const { data, error } = await supabase
-    .from('player_history')
+    .from('PlayerHistory')
     .select('*')
-    .eq('game_id', gameId)
+    .eq('gameId', gameId)
     .order('timestamp', { ascending: false })
     .limit(limit)
 
@@ -99,10 +109,10 @@ export async function fetchAggregatedData(): Promise<AggregatedDataResponse> {
     const transformedGames = games.map(game => ({
       gameId: game.id,
       gameName: game.name,
-      currentPlayers: game.current_players,
-      peakPlayers24h: game.peak_players_24h,
+      currentPlayers: game.currentPlayers || game.current_players || 0,
+      peakPlayers24h: game.peakPlayers24h || game.peak_players_24h || 0,
       trend: game.trend as 'up' | 'down' | 'stable',
-      lastUpdate: game.last_update,
+      lastUpdate: game.lastUpdate || game.last_update,
       sources: ['Supabase'],
       description: game.description,
       rating: game.rating,
@@ -111,18 +121,18 @@ export async function fetchAggregatedData(): Promise<AggregatedDataResponse> {
       tags: game.tags || [],
       image: game.image,
       owners: game.owners,
-      positiveReviews: game.positive_reviews,
-      negativeReviews: game.negative_reviews,
-      averagePlaytime: game.average_playtime,
+      positiveReviews: game.positiveReviews || game.positive_reviews,
+      negativeReviews: game.negativeReviews || game.negative_reviews,
+      averagePlaytime: game.averagePlaytime || game.average_playtime,
       price: game.price
     }))
 
     const transformedCountries = countries.map(country => ({
       countryCode: country.code,
       countryName: country.name,
-      totalPlayers: country.total_players,
-      games: country.games_data,
-      lastUpdate: country.last_update
+      totalPlayers: country.totalPlayers || country.total_players || 0,
+      games: country.gamesData || country.games_data || {},
+      lastUpdate: country.lastUpdate || country.last_update
     }))
 
     const totalPlayers = transformedCountries.reduce((sum, c) => sum + c.totalPlayers, 0)
@@ -155,7 +165,7 @@ export function subscribeToGames(callback: (games: GameData[]) => void) {
       {
         event: '*',
         schema: 'public',
-        table: 'games'
+        table: 'Game'
       },
       async () => {
         // Fetch fresh data when any change occurs
