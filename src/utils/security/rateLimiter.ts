@@ -3,11 +3,6 @@
  * Prevents abuse by limiting request frequency
  */
 
-interface RateLimitConfig {
-  maxRequests: number
-  windowMs: number
-}
-
 class RateLimiter {
   private requests: Map<string, number[]> = new Map()
   
