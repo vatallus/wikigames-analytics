@@ -27,9 +27,11 @@ export function UserMenu() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  if (!user || !profile) return null
+  // Show basic menu even if profile not loaded yet
+  if (!user) return null
 
   const getMembershipBadge = () => {
+    if (!profile) return null
     switch (profile.membership_tier) {
       case 'gold':
         return { icon: Crown, color: 'text-yellow-400', bg: 'bg-yellow-400/20', label: 'Gold Legend' }
@@ -43,6 +45,8 @@ export function UserMenu() {
   }
 
   const badge = getMembershipBadge()
+  const username = profile?.username || user.email?.split('@')[0] || 'User'
+  const avatarUrl = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`
 
   return (
     <div className="relative" ref={menuRef}>
@@ -53,11 +57,11 @@ export function UserMenu() {
         {/* Avatar */}
         <div className="relative">
           <img
-            src={profile.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}`}
-            alt={profile.username}
+            src={avatarUrl}
+            alt={username}
             className="w-8 h-8 rounded-full"
           />
-          {profile.is_online && (
+          {profile?.is_online && (
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900" />
           )}
         </div>
@@ -65,12 +69,14 @@ export function UserMenu() {
         {/* Info */}
         <div className="text-left hidden sm:block">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-white">{profile.username}</span>
+            <span className="text-sm font-medium text-white">{username}</span>
             {badge && (
               <badge.icon className={`w-3.5 h-3.5 ${badge.color}`} />
             )}
           </div>
-          <span className="text-xs text-gray-400">Level {profile.gaming_level}</span>
+          {profile && (
+            <span className="text-xs text-gray-400">Level {profile.gaming_level}</span>
+          )}
         </div>
 
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -83,12 +89,12 @@ export function UserMenu() {
           <div className="px-4 py-3 border-b border-slate-700">
             <div className="flex items-center gap-3">
               <img
-                src={profile.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}`}
-                alt={profile.username}
+                src={avatarUrl}
+                alt={username}
                 className="w-12 h-12 rounded-full"
               />
               <div className="flex-1">
-                <p className="font-medium text-white">{profile.username}</p>
+                <p className="font-medium text-white">{username}</p>
                 <p className="text-xs text-gray-400">{user.email}</p>
               </div>
             </div>
@@ -121,7 +127,7 @@ export function UserMenu() {
               <span className="text-sm">Chat</span>
             </a>
 
-            {profile.membership_tier === 'free' && (
+            {profile?.membership_tier === 'free' && (
               <a
                 href="/membership"
                 className="flex items-center gap-3 px-4 py-2 text-gradient-to-r from-blue-400 to-purple-400 hover:bg-slate-700/50 transition-colors"
