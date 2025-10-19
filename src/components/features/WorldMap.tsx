@@ -28,18 +28,24 @@ export default function WorldMap({ data, onCountryClick }: WorldMapProps) {
     .domain([0, minPlayers, maxPlayers])
     .range(['#1f2937', '#3b82f6', '#60a5fa'])
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="w-full bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center" style={{ height: '500px' }}>
+        <p className="text-gray-400">Loading map data...</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="w-full h-full min-h-[400px] bg-gray-800 rounded-lg overflow-hidden">
+    <div className="w-full bg-gray-800 rounded-lg overflow-hidden" style={{ height: '500px' }}>
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
           scale: 147,
           center: [0, 20]
         }}
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
+        width={800}
+        height={500}
       >
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
