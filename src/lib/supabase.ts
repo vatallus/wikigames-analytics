@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Get Supabase URL and anon key from environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Trim to remove any whitespace/newlines that might cause WebSocket errors
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
 
 // Fallback values for development/demo mode
 const FALLBACK_URL = 'https://demo.supabase.co'

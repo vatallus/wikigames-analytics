@@ -1,6 +1,5 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query'
 import { Moon, Sun, RefreshCw, Wifi, WifiOff, Bell, Heart } from 'lucide-react'
 import { Analytics } from '@vercel/analytics/react'
 import { Toaster } from 'react-hot-toast'
@@ -12,31 +11,16 @@ import { NotificationPanel } from './components/NotificationPanel'
 import { DonationPanel } from './components/DonationPanel'
 import { AuthProvider } from './contexts/AuthContext'
 import { AuthButtons } from './components/auth/AuthButtons'
-import { queryClient } from './lib/queryClient'
+import { HomePage } from './pages/HomePage'
+import { AnalyticsPage } from './pages/AnalyticsPage'
+import { LeaderboardsPage } from './pages/LeaderboardsPage'
+import { DiscoverPage } from './pages/DiscoverPage'
+import { ProfilePage } from './pages/ProfilePage'
+import { DonateConfirmPage } from './pages/DonateConfirmPage'
+import { BlogPage } from './pages/BlogPage'
+import { BlogPostPage } from './pages/BlogPostPage'
 import { useRealTimeData } from './hooks/useRealTimeData'
 import { useNotifications } from './hooks/useNotifications'
-
-// Lazy load pages for better performance
-const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
-const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })))
-const LeaderboardsPage = lazy(() => import('./pages/LeaderboardsPage').then(m => ({ default: m.LeaderboardsPage })))
-const DiscoverPage = lazy(() => import('./pages/DiscoverPage').then(m => ({ default: m.DiscoverPage })))
-const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })))
-const DonateConfirmPage = lazy(() => import('./pages/DonateConfirmPage').then(m => ({ default: m.DonateConfirmPage })))
-const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })))
-const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
-
-// Loading fallback component
-function PageLoader() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        <p className="text-sm text-muted-foreground">Loading...</p>
-      </div>
-    </div>
-  )
-}
 
 function AppContent() {
   const [isDarkMode, setIsDarkMode] = useState(true)
@@ -192,21 +176,18 @@ function AppContent() {
         {/* Navigation Bar */}
         <Navigation />
 
-        {/* Main Content with Suspense for lazy loading */}
+        {/* Main Content */}
         <main className="relative container mx-auto px-4 py-8 z-0">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/leaderboards" element={<LeaderboardsPage />} />
-              <Route path="/discover" element={<DiscoverPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:slug" element={<BlogPostPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/donate/confirm" element={<DonateConfirmPage />} />
-            </Routes>
-          </Suspense>
-        </main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/leaderboards" element={<LeaderboardsPage />} />
+            <Route path="/discover" element={<DiscoverPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/donate/confirm" element={<DonateConfirmPage />} />
+          </Routes>        </main>
 
         {/* Footer */}
         <footer className="relative border-t bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 mt-16 z-10">
@@ -246,14 +227,11 @@ function AppContent() {
   )
 }
 
-// Wrap with providers
+// Wrap with AuthProvider
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </QueryClientProvider>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
-
