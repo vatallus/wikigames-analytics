@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useClickOutside } from '@/hooks/useClickOutside'
 import { 
   User, 
   LogOut, 
@@ -16,16 +17,8 @@ export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  // Close menu when clicking outside
+  useClickOutside(menuRef, () => setIsOpen(false))
 
   // Show basic menu even if profile not loaded yet
   if (!user) return null

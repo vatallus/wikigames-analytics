@@ -5,11 +5,13 @@ import { X, Check, AlertCircle, ExternalLink } from 'lucide-react'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card'
 import toast from 'react-hot-toast'
+import { validateTransactionHash, getHashPattern, type CryptoNetwork } from '@/utils/validation/transactionHash'
+import { sanitizeTransactionHash } from '@/utils/security/sanitize'
 
 interface VerifyTransactionModalProps {
   isOpen: boolean
   onClose: () => void
-  selectedCurrency: 'usdt_trc20' | 'btc' | 'eth' | 'bnb'
+  selectedCurrency: CryptoNetwork
 }
 
 export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: VerifyTransactionModalProps) {
@@ -19,64 +21,34 @@ export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: Ve
   const [amount, setAmount] = useState('')
 
   const getCurrencyInfo = () => {
-    const info = {
-      usdt_trc20: {
-        name: 'USDT (TRC20)',
-        explorer: 'TronScan',
-        explorerUrl: 'https://tronscan.org',
-        placeholder: 'Example: a1b2c3d4e5f6...',
-        network: 'TRC20',
-        hashLength: 64,
-        pattern: /^[a-fA-F0-9]{64}$/
-      },
-      btc: {
-        name: 'Bitcoin',
-        explorer: 'Blockchain.com',
-        explorerUrl: 'https://blockchain.com/explorer',
-        placeholder: 'Example: 1a2b3c4d5e6f...',
-        network: 'Bitcoin',
-        hashLength: 64,
-        pattern: /^[a-fA-F0-9]{64}$/
-      },
-      eth: {
-        name: 'Ethereum',
-        explorer: 'Etherscan',
-        explorerUrl: 'https://etherscan.io',
-        placeholder: 'Example: 0x1a2b3c4d5e6f...',
-        network: 'ERC20',
-        hashLength: 66,
-        pattern: /^0x[a-fA-F0-9]{64}$/
-      },
-      bnb: {
-        name: 'BNB',
-        explorer: 'BscScan',
-        explorerUrl: 'https://bscscan.com',
-        placeholder: 'Example: 0x1a2b3c4d5e6f...',
-        network: 'BEP20',
-        hashLength: 66,
-        pattern: /^0x[a-fA-F0-9]{64}$/
-      }
+    const pattern = getHashPattern(selectedCurrency)
+    const explorerUrls = {
+      usdt_trc20: 'https://tronscan.org',
+      btc: 'https://blockchain.com/explorer',
+      eth: 'https://etherscan.io',
+      bnb: 'https://bscscan.com'
     }
-    return info[selectedCurrency]
-  }
-
-  const validateTransactionHash = (hash: string): boolean => {
-    const info = getCurrencyInfo()
-    
-    // Remove whitespace
-    const cleanHash = hash.trim()
-    
-    // Check if empty
-    if (!cleanHash) {
-      return false
+    const explorerNames = {
+      usdt_trc20: 'TronScan',
+      btc: 'Blockchain.com',
+      eth: 'Etherscan',
+      bnb: 'BscScan'
     }
-
-    // Validate against currency-specific pattern
-    return info.pattern.test(cleanHash)
+    
+    return {
+      ...pattern,
+      explorer: explorerNames[selectedCurrency],
+      explorerUrl: explorerUrls[selectedCurrency],
+      placeholder: `Example: ${pattern.example.slice(0, 16)}...`
+    }
   }
 
   const handleVerify = async () => {
-    if (!txHash || !amount) {
+    // Sanitize inputs
+    const cleanHash = sanitizeTransactionHash(txHash)
+    const cleanAmount = amount.trim()
+    
+    if (!cleanHash || !cleanAmount) {
       toast.error('Please fill in all fields')
       return
     }
@@ -87,7 +59,7 @@ export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: Ve
     }
 
     // Validate transaction hash format
-    if (!validateTransactionHash(txHash)) {
+    if (!validateTransactionHash(cleanHash, selectedCurrency)) {
       toast.error('Invalid transaction hash. Please check and try again.')
       return
     }

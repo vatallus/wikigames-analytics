@@ -1,6 +1,9 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User, Session, AuthChangeEvent } from '@supabase/supabase-js'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { supabase } from '@/lib/supabase'
+import { User, Session, AuthChangeEvent } from '@supabase/supabase-js'
+import { getEmailValidationError, normalizeEmail } from '@/utils/validation/email'
+import { sanitizeEmail, sanitizeUsername } from '@/utils/security/sanitize'
+import { MIN_PASSWORD_LENGTH } from '@/utils/constants'
 
 interface UserProfile {
   id: string
@@ -106,8 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signIn(email: string, password: string) {
+    // Sanitize and normalize email
+    const cleanEmail = normalizeEmail(sanitizeEmail(email))
+    
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: cleanEmail,
       password,
     })
 
@@ -124,23 +130,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signUp(email: string, password: string, username: string) {
-    // Validate email format before sending to Supabase
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      throw new Error(`Email address '${email}' is invalid`)
+    // Sanitize inputs
+    const cleanEmail = sanitizeEmail(email)
+    const cleanUsername = sanitizeUsername(username)
+    
+    // Validate email format
+    const emailError = getEmailValidationError(cleanEmail)
+    if (emailError) {
+      throw new Error(emailError)
     }
 
     // Validate password strength
-    if (password.length < 6) {
-      throw new Error('Password must be at least 6 characters long')
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      throw new Error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`)
+    }
+    
+    // Validate username
+    if (cleanUsername.length < 3) {
+      throw new Error('Username must be at least 3 characters long')
     }
 
     const { error } = await supabase.auth.signUp({
-      email,
+      email: normalizeEmail(cleanEmail),
       password,
       options: {
         data: {
-          username,
+          username: cleanUsername,
         },
       },
     })
