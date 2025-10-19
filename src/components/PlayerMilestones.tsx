@@ -80,7 +80,7 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
       }
     }
     return null
-  }).filter(Boolean)
+  }).filter((g): g is NonNullable<typeof g> => g !== null)
 
   // Get recently achieved milestones (highest achieved)
   const achievedMilestones = games.map(game => {
@@ -94,7 +94,7 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
       }
     }
     return null
-  }).filter(Boolean).sort((a, b) => b!.milestone.threshold - a!.milestone.threshold).slice(0, 5)
+  }).filter((g): g is NonNullable<typeof g> => g !== null).sort((a, b) => b.milestone.threshold - a.milestone.threshold).slice(0, 5)
 
   return (
     <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-card to-card/50">
@@ -120,7 +120,7 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
             
             {nearMilestoneGames.slice(0, 3).map((game, index) => (
               <motion.div
-                key={game!.gameId}
+                key={game.gameId}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -130,17 +130,17 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/10 to-transparent animate-pulse" />
                 
                 <div className="relative flex items-center gap-3">
-                  <GameIcon gameId={game!.gameId} size={40} />
+                  <GameIcon gameId={game.gameId} size={40} />
                   
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm mb-1">{game!.gameName}</div>
+                    <div className="font-semibold text-sm mb-1">{game.gameName}</div>
                     <div className="flex items-center gap-2 mb-2">
                       <AnimatedNumber 
-                        value={game!.currentPlayers} 
+                        value={game.currentPlayers} 
                         className="text-xs font-mono text-muted-foreground"
                       />
                       <span className="text-xs text-muted-foreground">
-                        → {game!.nextMilestone!.threshold.toLocaleString()}
+                        → {game.nextMilestone.threshold.toLocaleString()}
                       </span>
                     </div>
                     
@@ -148,7 +148,7 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
                     <div className="relative h-2 bg-secondary rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: `${game!.percentageToNext}%` }}
+                        animate={{ width: `${game.percentageToNext}%` }}
                         transition={{ duration: 1, delay: index * 0.1 }}
                         className="h-full bg-gradient-to-r from-orange-500 to-yellow-500"
                       />
@@ -156,9 +156,9 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
                   </div>
                   
                   <div className="flex-shrink-0 text-right">
-                    {getIcon(game!.nextMilestone!.icon, `h-8 w-8 ${game!.nextMilestone!.color}`)}
+                    {getIcon(game.nextMilestone.icon, `h-8 w-8 ${game.nextMilestone.color}`)}
                     <div className="text-xs font-bold text-orange-500 mt-1">
-                      {game!.distanceToNext!.toLocaleString()}
+                      {game.distanceToNext.toLocaleString()}
                     </div>
                     <div className="text-[10px] text-muted-foreground">to go</div>
                   </div>
@@ -181,28 +181,28 @@ export function PlayerMilestones({ games }: PlayerMilestonesProps) {
             <div className="space-y-2">
               {achievedMilestones.map((game, index) => (
                 <motion.div
-                  key={game!.gameId}
+                  key={game.gameId}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05 }}
                   className="flex items-center gap-3 p-3 bg-accent/50 rounded-lg border border-border/50 hover:border-primary/30 transition-colors"
                 >
-                  <GameIcon gameId={game!.gameId} size={32} />
+                  <GameIcon gameId={game.gameId} size={32} />
                   
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold truncate">{game!.gameName}</div>
+                    <div className="text-sm font-semibold truncate">{game.gameName}</div>
                     <div className="text-xs text-muted-foreground">
-                      {game!.currentPlayers.toLocaleString()} players
+                      {game.currentPlayers.toLocaleString()} players
                     </div>
                   </div>
                   
                   <div className="flex-shrink-0 text-right">
                     <Badge 
                       variant="secondary"
-                      className={`${game!.milestone.color} font-semibold text-xs`}
+                      className={`${game.milestone.color} font-semibold text-xs`}
                     >
-                      {getIcon(game!.milestone.icon, 'h-3 w-3 inline mr-1')}
-                      {game!.milestone.label}
+                      {getIcon(game.milestone.icon, 'h-3 w-3 inline mr-1')}
+                      {game.milestone.label}
                     </Badge>
                   </div>
                 </motion.div>

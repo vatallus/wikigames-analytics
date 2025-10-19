@@ -328,3 +328,42 @@ export function getTopCountriesForGame(gameId: string, limit: number = 5): Array
     .sort((a, b) => b.playerCount - a.playerCount)
     .slice(0, limit)
 }
+
+// Generate mock aggregated data for offline mode
+export function getMockAggregatedData() {
+  const games = GAMES.map(game => {
+    const totalPlayers = getTotalPlayersForGame(game.id)
+    const trends = ['up', 'down', 'stable'] as const
+    return {
+      gameId: game.id,
+      gameName: game.name,
+      currentPlayers: totalPlayers,
+      peakPlayers24h: Math.floor(totalPlayers * 1.2),
+      trend: trends[Math.floor(Math.random() * trends.length)],
+      lastUpdate: new Date().toISOString(),
+      sources: ['mock']
+    }
+  })
+
+  const countries = COUNTRY_DATA.map(country => ({
+    countryCode: country.countryCode,
+    countryName: country.country,
+    games: country.games,
+    totalPlayers: country.totalPlayers,
+    lastUpdate: new Date().toISOString()
+  }))
+
+  const totalPlayers = countries.reduce((sum, c) => sum + c.totalPlayers, 0)
+
+  return {
+    games,
+    countries,
+    globalStats: {
+      totalPlayers,
+      activeGames: games.length,
+      lastUpdate: new Date().toISOString()
+    },
+    news: [],
+    tournaments: []
+  }
+}

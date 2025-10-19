@@ -7,6 +7,7 @@ import {
   refreshData
 } from '@/services/apiService'
 import { useNotifications } from './useNotifications'
+import { getMockAggregatedData } from '@/data/mockData'
 
 export function useRealTimeData() {
   const [data, setData] = useState<AggregatedDataResponse | null>(null)
@@ -28,7 +29,11 @@ export function useRealTimeData() {
       
       if (!available) {
         setError('Backend server not running. Using mock data.')
-        console.warn('⚠️ Server not available. Start server with: cd server && npm run dev')
+        console.warn('⚠️ Server not available. Using mock data instead.')
+        // Load mock data immediately when server is offline
+        const mockData = getMockAggregatedData()
+        setData(mockData)
+        setIsLoading(false)
       }
     }
     

@@ -46,8 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session)
       setUser(session?.user ?? null)
       if (session?.user) {
-        loadProfile(session.user.id)
+        loadProfile(session.user.id).catch(console.error)
       }
+      setLoading(false)
+    }).catch((error) => {
+      console.error('Failed to get session:', error)
       setLoading(false)
     })
 
@@ -60,12 +63,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null)
       
       if (session?.user) {
-        await loadProfile(session.user.id)
+        await loadProfile(session.user.id).catch(console.error)
         // Update online status
-        await supabase
-          .from('profiles')
-          .update({ is_online: true, last_seen: new Date().toISOString() })
-          .eq('id', session.user.id)
+        try {
+          await supabase
+            .from('profiles')
+            .update({ is_online: true, last_seen: new Date().toISOString() })
+            .eq('id', session.user.id)
+        } catch (error) {
+          console.error('Failed to update online status:', error)
+        }
       } else {
         setProfile(null)
       }
@@ -82,10 +89,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const handleBeforeUnload = async () => {
       if (user) {
-        await supabase
-          .from('profiles')
-          .update({ is_online: false })
-          .eq('id', user.id)
+        try {
+          await supabase
+            .from('profiles')
+            .update({ is_online: false })
+            .eq('id', user.id)
+        } catch (error) {
+          // Ignore errors on unload
+        }
       }
     }
 
@@ -173,10 +184,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     // Update online status before signing out
     if (user) {
-      await supabase
-        .from('profiles')
-        .update({ is_online: false })
-        .eq('id', user.id)
+      try {
+        await supabase
+          .from('profiles')
+          .update({ is_online: false })
+          .eq('id', user.id)
+      } catch (error) {
+        console.error('Failed to update online status:', error)
+      }
     }
 
     const { error } = await supabase.auth.signOut()

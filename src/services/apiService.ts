@@ -1,5 +1,7 @@
-const API_BASE_URL = 'http://localhost:3001/api'
-const WS_URL = 'ws://localhost:3001'
+import { config } from '@/config/env'
+
+const API_BASE_URL = `${config.api.url}/api`
+const WS_URL = config.api.wsUrl
 
 export interface RealTimeGameData {
   gameId: string
@@ -161,7 +163,7 @@ export function createWebSocketConnection(
  */
 export async function checkServerHealth(): Promise<boolean> {
   try {
-    const response = await fetch('http://localhost:3001/health')
+    const response = await fetch(`${config.api.url}/health`)
     const data = await response.json()
     return data.status === 'ok'
   } catch {
