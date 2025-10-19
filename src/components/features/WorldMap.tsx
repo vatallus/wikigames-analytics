@@ -19,9 +19,9 @@ export default function WorldMap({ data, onCountryClick }: WorldMapProps) {
   const dataMap = new Map(data.map(d => [d.country_code, d.total_players]))
   
   // Find min and max for color scale
-  const playerCounts = data.map(d => d.total_players)
-  const minPlayers = Math.min(...playerCounts)
-  const maxPlayers = Math.max(...playerCounts)
+  const playerCounts = data.map(d => d.total_players).filter(n => n > 0)
+  const minPlayers = playerCounts.length > 0 ? Math.min(...playerCounts) : 0
+  const maxPlayers = playerCounts.length > 0 ? Math.max(...playerCounts) : 100000
   
   // Color scale from dark to bright blue
   const colorScale = scaleLinear<string>()
