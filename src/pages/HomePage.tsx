@@ -5,6 +5,7 @@ import { Globe, Users, Trophy } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { PageLoadingSkeleton } from '../components/layout/LoadingSkeleton'
+import WorldMap from '../components/features/WorldMap'
 
 export default function HomePage() {
   const { data: games, isLoading: gamesLoading } = useQuery({
@@ -70,22 +71,38 @@ export default function HomePage() {
         </Card>
       </div>
 
-      {/* World Map Placeholder */}
+      {/* World Map */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>World Map</CardTitle>
+          <CardTitle className="flex items-center">
+            <Globe className="mr-2 text-primary-500" />
+            Global Player Distribution
+          </CardTitle>
           <p className="text-gray-400 text-sm">
-            Interactive world map with regional player distribution (Coming in Day 4)
+            Interactive world map showing player counts by country
           </p>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {countryStats?.slice(0, 8).map((country) => (
-              <div key={country.country_code} className="p-3 bg-gray-800 rounded">
-                <div className="text-sm text-gray-400">{country.country_name}</div>
-                <div className="text-lg font-semibold">{formatNumber(country.total_players)}</div>
-              </div>
-            ))}
+          <div className="mb-6">
+            <WorldMap 
+              data={countryStats || []}
+              onCountryClick={(code) => {
+                console.log('Clicked country:', code)
+              }}
+            />
+          </div>
+          
+          {/* Top Countries */}
+          <div className="mt-6">
+            <h3 className="text-sm font-semibold text-gray-400 mb-3">Top Countries</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {countryStats?.slice(0, 8).map((country) => (
+                <div key={country.country_code} className="p-3 bg-gray-800 rounded hover:bg-gray-750 transition-colors">
+                  <div className="text-sm text-gray-400">{country.country_name}</div>
+                  <div className="text-lg font-semibold">{formatNumber(country.total_players)}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
