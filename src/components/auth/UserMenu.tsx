@@ -49,9 +49,12 @@ export function UserMenu() {
   const avatarUrl = profile?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative z-50" ref={menuRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          console.log('UserMenu button clicked, toggling:', !isOpen)
+          setIsOpen(!isOpen)
+        }}
         className="flex items-center gap-3 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 transition-colors"
       >
         {/* Avatar */}
@@ -84,7 +87,7 @@ export function UserMenu() {
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-2 z-50">
+        <div className="absolute right-0 mt-2 w-64 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-2 z-[9999]">
           {/* Profile header */}
           <div className="px-4 py-3 border-b border-slate-700">
             <div className="flex items-center gap-3">
@@ -150,8 +153,15 @@ export function UserMenu() {
           <div className="border-t border-slate-700 pt-2">
             <button
               onClick={async () => {
-                await signOut()
-                setIsOpen(false)
+                console.log('Sign Out button clicked!')
+                try {
+                  await signOut()
+                  console.log('Sign Out successful')
+                  setIsOpen(false)
+                  window.location.href = '/'
+                } catch (error) {
+                  console.error('Sign Out error:', error)
+                }
               }}
               className="w-full flex items-center gap-3 px-4 py-2 text-red-400 hover:bg-slate-700/50 transition-colors"
             >
