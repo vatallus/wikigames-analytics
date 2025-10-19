@@ -31,10 +31,16 @@ const loadConfig = (): Config => {
     isProd: import.meta.env.PROD
   }
 
-  // Validate critical env vars in production
+  // Validate and log critical env vars in production
   if (config.isProd) {
-    if (!config.api.url) {
-      console.error('❌ Missing VITE_API_URL in production')
+    console.log('🔧 Production Config:', {
+      apiUrl: config.api.url,
+      wsUrl: config.api.wsUrl,
+      hasSupabase: !!(config.supabase.url && config.supabase.anonKey)
+    })
+    
+    if (!config.api.url || config.api.url === 'http://localhost:3001') {
+      console.error('❌ Missing or invalid VITE_API_URL in production')
     }
     if (!config.supabase.url || !config.supabase.anonKey) {
       console.warn('⚠️ Missing Supabase configuration - Auth features will be limited')
