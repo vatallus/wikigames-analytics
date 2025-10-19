@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { PageLoadingSkeleton } from '../components/layout/LoadingSkeleton'
 import WorldMap from '../components/features/WorldMap'
+import SimpleWorldMap from '../components/features/SimpleWorldMap'
 
 export default function HomePage() {
   const { data: games, isLoading: gamesLoading } = useQuery({
@@ -84,12 +85,17 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <div className="mb-6">
+            {/* Using SimpleWorldMap for better React 19 compatibility */}
+            <SimpleWorldMap data={countryStats || []} />
+            
+            {/* Uncomment when react-simple-maps is compatible with React 19
             <WorldMap 
               data={countryStats || []}
               onCountryClick={(code) => {
                 console.log('Clicked country:', code)
               }}
             />
+            */}
           </div>
           
           {/* Top Countries */}
