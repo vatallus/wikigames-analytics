@@ -112,7 +112,7 @@ export async function fetchAggregatedData(): Promise<AggregatedDataResponse> {
       currentPlayers: game.currentPlayers || game.current_players || 0,
       peakPlayers24h: game.peakPlayers24h || game.peak_players_24h || 0,
       trend: game.trend as 'up' | 'down' | 'stable',
-      lastUpdate: game.lastUpdate || game.last_update,
+      lastUpdate: game.lastUpdate || game.last_update || new Date().toISOString(),
       sources: ['Supabase'],
       description: game.description,
       rating: game.rating,
@@ -132,7 +132,7 @@ export async function fetchAggregatedData(): Promise<AggregatedDataResponse> {
       countryName: country.name,
       totalPlayers: country.totalPlayers || country.total_players || 0,
       games: country.gamesData || country.games_data || {},
-      lastUpdate: country.lastUpdate || country.last_update
+      lastUpdate: country.lastUpdate || country.last_update || new Date().toISOString()
     }))
 
     const totalPlayers = transformedCountries.reduce((sum, c) => sum + c.totalPlayers, 0)
