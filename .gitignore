@@ -12,15 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
-.env
-.env.local
-.env.production
-
-# Wallet addresses (sensitive!)
-WALLET_ADDRESSES.config
-*.backup
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -31,4 +22,3 @@ WALLET_ADDRESSES.config
 *.njsproj
 *.sln
 *.sw?
-.vercel
