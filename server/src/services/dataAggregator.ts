@@ -202,36 +202,11 @@ export function getCachedData(): AggregatedData | null {
 }
 
 /**
- * Save data to database (background task)
+ * Save data to database (background task) - DISABLED
+ * Database is optional, using memory/Redis cache instead
  */
 async function saveToDatabase(games: GameData[], countries: CountryPlayerData[]): Promise<void> {
-  try {
-    // Save all games to database
-    const gamePromises = games.map(game => {
-      // Save game data
-      const gamePromise = upsertGame({
-        ...game,
-        appId: STEAM_GAMES[game.gameId as keyof typeof STEAM_GAMES]?.appId || game.gameId,
-        type: STEAM_GAMES[game.gameId as keyof typeof STEAM_GAMES]?.type || 'Unknown',
-      })
-      
-      // Save player history
-      const historyPromise = savePlayerHistory(game.gameId, game.currentPlayers)
-      
-      return Promise.all([gamePromise, historyPromise])
-    })
-    
-    await Promise.all(gamePromises)
-    
-    // Save country data
-    const countryPromises = countries.map(country =>
-      upsertCountry(country.countryCode, country.countryName, country.totalPlayers, country.games)
-    )
-    
-    await Promise.all(countryPromises)
-    
-    console.log('💾 Saved to database')
-  } catch (error) {
-    console.error('Error saving to database:', error)
-  }
+  // Database saving disabled - using cache only
+  console.log('💾 Database disabled - using cache storage')
+  return
 }

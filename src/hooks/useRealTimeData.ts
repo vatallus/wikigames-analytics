@@ -1,65 +1,30 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import {
-  fetchGameData,
-  createWebSocketConnection,
-  checkServerHealth,
-  AggregatedDataResponse,
-  refreshData
-} from '@/services/apiService'
+import { AggregatedDataResponse } from '@/services/apiService'
+import { fetchAggregatedData, subscribeToGames } from '@/services/supabaseDataService'
 import { useNotifications } from './useNotifications'
-import { getMockAggregatedData } from '@/data/mockData'
 
 export function useRealTimeData() {
   const [data, setData] = useState<AggregatedDataResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isConnected, setIsConnected] = useState(false)
+  const [isConnected, setIsConnected] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [serverAvailable, setServerAvailable] = useState(false)
-  const wsRef = useRef<WebSocket | null>(null)
+  const [serverAvailable] = useState(true) // Supabase is always available
   const previousDataRef = useRef<AggregatedDataResponse | null>(null)
   
   // Get notification helpers
   const { checkPlayerSpike, checkPlayerDrop, checkMilestone } = useNotifications()
 
-  // Check if server is running
+  // Initial data fetch from Supabase
   useEffect(() => {
-    const checkServer = async () => {
-      const available = await checkServerHealth()
-      setServerAvailable(available)
-      
-      if (!available) {
-        setError('Backend server not running. Using mock data.')
-        console.warn('⚠️ Server not available. Using mock data instead.')
-        // Load mock data immediately when server is offline
-        const mockData = getMockAggregatedData()
-        setData(mockData)
-        setIsLoading(false)
-      }
-    }
-    
-    // ✅ Only check once on mount - not every 10s!
-    // WebSocket will handle connection status
-    checkServer()
-    
-    // ✅ Removed: const interval = setInterval(checkServer, 10000)
-    // This was causing 600 requests/min with 100 users!
-  }, [])
-
-  // Initial data fetch
-  useEffect(() => {
-    if (!serverAvailable) {
-      setIsLoading(false)
-      return
-    }
-
     const loadInitialData = async () => {
       try {
         setIsLoading(true)
-        const initialData = await fetchGameData()
+        const initialData = await fetchAggregatedData()
         setData(initialData)
         setError(null)
+        console.log('✅ Data loaded from Supabase')
       } catch (err) {
-        setError('Failed to load data from server')
+        setError('Failed to load data from Supabase')
         console.error('Failed to fetch initial data:', err)
       } finally {
         setIsLoading(false)
@@ -67,7 +32,7 @@ export function useRealTimeData() {
     }
 
     loadInitialData()
-  }, [serverAvailable])
+  }, [])
 
   // Auto-detect changes and trigger notifications
   const detectChangesAndNotify = useCallback((newData: AggregatedDataResponse) => {
@@ -116,89 +81,48 @@ export function useRealTimeData() {
     previousDataRef.current = newData
   }, [checkPlayerSpike, checkPlayerDrop, checkMilestone])
 
-  // WebSocket connection for real-time updates with auto-reconnect
+  // Supabase real-time subscription for game updates
   useEffect(() => {
-    if (!serverAvailable) return
-
-    let reconnectAttempts = 0
-    const maxReconnectAttempts = 5
-    let reconnectTimeout: NodeJS.Timeout | null = null
-    let shouldReconnect = true
-
-    const connect = () => {
-      const ws = createWebSocketConnection(
-        (newData) => {
-          // Detect changes and notify BEFORE setting data
-          detectChangesAndNotify(newData)
-          
-          setData(newData)
-          setIsConnected(true)
-          setError(null)
-        },
-        (error) => {
-          console.error('WebSocket error:', error)
-          setIsConnected(false)
-          setError('Real-time connection lost')
-        }
-      )
-
-      wsRef.current = ws
-
-      ws.onopen = () => {
-        setIsConnected(true)
-        reconnectAttempts = 0 // ✅ Reset on successful connection
-        console.log('✅ Real-time updates active')
-      }
-
-      ws.onclose = () => {
-        setIsConnected(false)
-        console.log('❌ Real-time updates stopped')
+    const unsubscribe = subscribeToGames(async () => {
+      try {
+        // Fetch fresh data when changes detected
+        const newData = await fetchAggregatedData()
         
-        // ✅ Auto-reconnect with exponential backoff
-        if (shouldReconnect && reconnectAttempts < maxReconnectAttempts) {
-          const delay = Math.min(1000 * (2 ** reconnectAttempts), 30000)
-          reconnectAttempts++
-          
-          console.log(`🔄 Reconnecting in ${delay/1000}s... (Attempt ${reconnectAttempts}/${maxReconnectAttempts})`)
-          
-          reconnectTimeout = setTimeout(() => {
-            connect()
-          }, delay)
-        } else if (reconnectAttempts >= maxReconnectAttempts) {
-          setError('Connection lost. Please refresh the page.')
-        }
+        // Detect changes and notify BEFORE setting data
+        detectChangesAndNotify(newData)
+        
+        setData(newData)
+        setIsConnected(true)
+        setError(null)
+        console.log('🔄 Data updated from Supabase realtime')
+      } catch (err) {
+        console.error('Failed to fetch updated data:', err)
+        setError('Failed to update data')
       }
+    })
 
-      return ws
-    }
-
-    connect()
+    console.log('✅ Supabase realtime subscription active')
 
     return () => {
-      shouldReconnect = false
-      if (reconnectTimeout) clearTimeout(reconnectTimeout)
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        wsRef.current.close()
-      }
+      unsubscribe()
     }
-  }, [serverAvailable, detectChangesAndNotify])
+  }, [detectChangesAndNotify])
 
   // Manual refresh function
   const refresh = useCallback(async () => {
-    if (!serverAvailable) return
-
     try {
       setIsLoading(true)
-      const newData = await refreshData()
+      const newData = await fetchAggregatedData()
       setData(newData)
       setError(null)
+      console.log('✅ Data refreshed from Supabase')
     } catch (err) {
       setError('Failed to refresh data')
       console.error('Refresh failed:', err)
     } finally {
       setIsLoading(false)
     }
-  }, [serverAvailable])
+  }, [])
 
   return {
     data,
