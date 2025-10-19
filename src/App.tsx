@@ -25,6 +25,8 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ defaul
 const DonateConfirmPage = lazy(() => import('./pages/DonateConfirmPage').then(m => ({ default: m.DonateConfirmPage })))
 const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })))
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })))
+const CreatePostPage = lazy(() => import('./pages/CreatePostPage').then(m => ({ default: m.CreatePostPage })))
+const ChatPage = lazy(() => import('./pages/ChatPage').then(m => ({ default: m.ChatPage })))
 
 // Loading fallback component
 function PageLoader() {
@@ -201,7 +203,9 @@ function AppContent() {
               <Route path="/leaderboards" element={<LeaderboardsPage />} />
               <Route path="/discover" element={<DiscoverPage />} />
               <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/create" element={<CreatePostPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/chat" element={<ChatPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/donate/confirm" element={<DonateConfirmPage />} />
             </Routes>
