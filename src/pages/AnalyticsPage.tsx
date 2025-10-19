@@ -28,15 +28,20 @@ export function AnalyticsPage() {
   if (error && !serverAvailable) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-lg">
           <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <p className="text-lg font-semibold mb-2">Server Offline</p>
-          <p className="text-sm text-muted-foreground mb-4">
-            Backend server is not running. Start it with: <code className="bg-muted px-2 py-1 rounded">cd server && npm run dev</code>
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Using mock data for now
-          </p>
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6 text-left">
+            <p className="text-lg font-semibold mb-2 text-yellow-600 dark:text-yellow-400">Server Offline</p>
+            <p className="text-sm text-muted-foreground mb-3">
+              Backend server is not running. Start it with:
+            </p>
+            <code className="block bg-muted px-3 py-2 rounded text-xs font-mono mb-3">
+              cd server && npm run dev
+            </code>
+            <p className="text-sm font-medium text-muted-foreground">
+              Using mock data for now
+            </p>
+          </div>
         </div>
       </div>
     )

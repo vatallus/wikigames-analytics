@@ -7,7 +7,7 @@ export function AuthCallbackPage() {
 
   useEffect(() => {
     // Handle the OAuth callback
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((event, _session) => {
       if (event === 'SIGNED_IN') {
         // Redirect to home page after successful sign in
         navigate('/')

@@ -24,32 +24,55 @@ export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: Ve
         name: 'USDT (TRC20)',
         explorer: 'TronScan',
         explorerUrl: 'https://tronscan.org',
-        placeholder: 'TX123abc...',
-        network: 'TRC20'
+        placeholder: 'Example: a1b2c3d4e5f6...',
+        network: 'TRC20',
+        hashLength: 64,
+        pattern: /^[a-fA-F0-9]{64}$/
       },
       btc: {
         name: 'Bitcoin',
         explorer: 'Blockchain.com',
         explorerUrl: 'https://blockchain.com/explorer',
-        placeholder: '0x123abc...',
-        network: 'Bitcoin'
+        placeholder: 'Example: 1a2b3c4d5e6f...',
+        network: 'Bitcoin',
+        hashLength: 64,
+        pattern: /^[a-fA-F0-9]{64}$/
       },
       eth: {
         name: 'Ethereum',
         explorer: 'Etherscan',
         explorerUrl: 'https://etherscan.io',
-        placeholder: '0x123abc...',
-        network: 'ERC20'
+        placeholder: 'Example: 0x1a2b3c4d5e6f...',
+        network: 'ERC20',
+        hashLength: 66,
+        pattern: /^0x[a-fA-F0-9]{64}$/
       },
       bnb: {
         name: 'BNB',
         explorer: 'BscScan',
         explorerUrl: 'https://bscscan.com',
-        placeholder: '0x123abc...',
-        network: 'BEP20'
+        placeholder: 'Example: 0x1a2b3c4d5e6f...',
+        network: 'BEP20',
+        hashLength: 66,
+        pattern: /^0x[a-fA-F0-9]{64}$/
       }
     }
     return info[selectedCurrency]
+  }
+
+  const validateTransactionHash = (hash: string): boolean => {
+    const info = getCurrencyInfo()
+    
+    // Remove whitespace
+    const cleanHash = hash.trim()
+    
+    // Check if empty
+    if (!cleanHash) {
+      return false
+    }
+
+    // Validate against currency-specific pattern
+    return info.pattern.test(cleanHash)
   }
 
   const handleVerify = async () => {
@@ -63,30 +86,30 @@ export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: Ve
       return
     }
 
+    // Validate transaction hash format
+    if (!validateTransactionHash(txHash)) {
+      toast.error('Invalid transaction hash. Please check and try again.')
+      return
+    }
+
     // Set verifying state
     setStep('verifying')
     
-    // Simulate verification (trong thực tế sẽ call blockchain API)
+    // Simulate blockchain verification
     await new Promise(resolve => setTimeout(resolve, 2000))
 
-    // For now, accept any transaction hash with reasonable length
-    if (txHash.length >= 10) {
-      setStep('verified')
-      
-      // Save to sessionStorage for confirmation page
-      sessionStorage.setItem('verified_donation', JSON.stringify({
-        txHash,
-        amount,
-        currency: selectedCurrency,
-        timestamp: Date.now(),
-        verified: true
-      }))
-      
-      toast.success('Transaction verified! 🎉')
-    } else {
-      toast.error('Invalid transaction hash. Please check and try again.')
-      setStep('input')
-    }
+    setStep('verified')
+    
+    // Save to sessionStorage for confirmation page
+    sessionStorage.setItem('verified_donation', JSON.stringify({
+      txHash,
+      amount,
+      currency: selectedCurrency,
+      timestamp: Date.now(),
+      verified: true
+    }))
+    
+    toast.success('Transaction information received! We will verify it within 24 hours. 🎉')
   }
 
   const handleContinue = () => {
@@ -244,13 +267,24 @@ export function VerifyTransactionModal({ isOpen, onClose, selectedCurrency }: Ve
                       <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
                         <Check className="h-8 w-8 text-green-500" />
                       </div>
+                      <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">
+                        Transaction Information Received!
+                      </p>
                       <p className="text-sm text-muted-foreground mb-4">
-                        Your transaction has been verified successfully!
+                        We have received your transaction details. Our team will verify the transaction on the blockchain within 24 hours.
                       </p>
                       <div className="bg-muted p-3 rounded-lg text-sm text-left space-y-1">
                         <p><strong>Amount:</strong> ${amount}</p>
                         <p><strong>Currency:</strong> {currencyInfo.name}</p>
                         <p className="break-all"><strong>TX Hash:</strong> {txHash.slice(0, 10)}...{txHash.slice(-10)}</p>
+                      </div>
+                      <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-left">
+                        <p className="font-medium text-blue-600 dark:text-blue-400 mb-1">📌 Next Steps:</p>
+                        <ul className="space-y-1 text-muted-foreground list-disc list-inside">
+                          <li>Manual verification will be completed within 24 hours</li>
+                          <li>You will receive an email confirmation once verified</li>
+                          <li>Your donation will appear in your profile after confirmation</li>
+                        </ul>
                       </div>
                     </div>
 
