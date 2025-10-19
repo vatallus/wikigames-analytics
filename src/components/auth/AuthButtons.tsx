@@ -3,12 +3,12 @@ import { LogIn, UserPlus } from 'lucide-react'
 import { AuthModal } from './AuthModal'
 import { useAuth } from '@/contexts/AuthContext'
 import { UserMenu } from './UserMenu'
-import { isSupabaseConfigured } from '@/lib/supabase'
 
 export function AuthButtons() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [mounted, setMounted] = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
   
   let user = null
   let loading = true
@@ -24,10 +24,17 @@ export function AuthButtons() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // Timeout after 2 seconds to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setTimedOut(true)
+    }, 2000)
+    
+    return () => clearTimeout(timeout)
   }, [])
 
-  // Show skeleton only briefly on initial mount
-  if (!mounted || (loading && !user)) {
+  // Show skeleton only briefly on initial mount (max 2 seconds)
+  if (!mounted || (loading && !user && !timedOut)) {
     return (
       <div className="flex items-center gap-2">
         <div className="w-20 h-10 bg-slate-800/50 rounded-lg animate-pulse" />
@@ -35,17 +42,7 @@ export function AuthButtons() {
     )
   }
 
-  // If Supabase not configured, show message
-  if (!isSupabaseConfigured) {
-    return (
-      <div className="flex items-center gap-2">
-        <div className="px-3 py-1.5 text-xs bg-yellow-500/10 text-yellow-500 rounded border border-yellow-500/20">
-          Auth Disabled
-        </div>
-      </div>
-    )
-  }
-
+  // If user is logged in, show user menu
   if (user) {
     return <UserMenu />
   }
